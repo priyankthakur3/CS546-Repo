@@ -52,6 +52,7 @@ let censorWords = (string, badWordsList) => {
 };
 
 let distance = (string, word1, word2) => {
+  let regexNonAlphaNumeric = "/W/";
   if (
     typeof string !== "string" ||
     typeof word1 !== "string" ||
@@ -68,10 +69,20 @@ let distance = (string, word1, word2) => {
   if (word1 === word2)
     throw new Error("Error: Expected different words for getting index");
 
-  if (string.match(/^[a-zA-Z0-9]+$/g).trim.length > 1) {
-  }
+  if (
+    regexNonAlphaNumeric.test(string) ||
+    regexNonAlphaNumeric.test(word1) ||
+    regexNonAlphaNumeric.test(word2)
+  )
+    throw new Error("Error: Input contains non-alphanumeric characters");
 
   let words = string.split(" ");
+  if (words.length <= 2)
+    throw new Error("Error: String contains less than 2 words");
+
+  let word1Index = string.indexOf(word1);
+  let word2Index = string.indexOf(word2);
+  console.log(word1Index, word2Index);
 
   return false;
 };
