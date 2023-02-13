@@ -50,7 +50,7 @@ let combineObjects = (...args) => {
     for (const key in tempObj) {
       if (!resultObj.hasOwnProperty(key)) {
         for (let j = i + 1; j < args.length; j++) {
-          console.log(key, tempObj, args[j]);
+          //console.log(key, tempObj, args[j]);
           if (args[j].hasOwnProperty(key)) {
             /**
              * todo: Convert to use intersection method
