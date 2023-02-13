@@ -9,11 +9,14 @@ let palindromes = (string) => {
     throw new Error("Error: Expected String to be Array");
   }
 
-  if (!string.isArray && string.length < 1) {
+  if (!Array.isArray(string) || string.length < 1)
+    throw new Error("Error: Expected Input parameter to non-empty Array");
+
+  //fixed isArray check
+  //check if input string is of array and has atleast one element
+  if (!Array.isArray(string) && string.length < 1) {
     throw new Error("Error: Expected String to be Array and non empty");
   }
-
-  /* !string.isArray() && typeof string.length < 1;*/
 
   let resultObject = {};
   let regexAlphaNumeric = /\w/;
@@ -26,7 +29,13 @@ let palindromes = (string) => {
         "Error: Expected String to contain one Alpha-Numeric Character"
       );
     }
-    keepLowerAplhaNum(word);
+
+    //convert string to lowecase and get rid of all non-alpha numeric characters empty space
+    try {
+      keepLowerAplhaNum(word);
+    } catch (e) {
+      throw e;
+    }
   });
 
   // clean string arr of any non alpha numeric character and convert to lowerCase
@@ -54,8 +63,13 @@ let censorWords = (string, badWordsList) => {
   if (typeof string !== "string" || string.trim().length === 0) {
     throw new Error("Error: Expected Input as String");
   }
-  //console.log(typeof badWordsList);
-  if (typeof badWordsList !== "object" || badWordsList.length < 0) {
+
+  ///check if badWordsList is array
+  if (
+    typeof badWordsList !== "object" ||
+    !Array.isArray(string) ||
+    badWordsList.length < 0
+  ) {
     throw new Error("Error: Expected badWordsList to be array");
   }
 
