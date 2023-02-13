@@ -5,13 +5,7 @@
 
 import * as helper from "./helpers.js";
 
-let sortAndFilter = (
-  array,
-  [sortByField1, order1],
-  [sortByField2, order2],
-  filterBy,
-  filterByTerm
-) => {
+let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
   /**
    * !todo: Check if all error handling is implemented or not
    */
@@ -25,7 +19,30 @@ let sortAndFilter = (
     throw new Error("Error: Expected Array and two elements");
   }
 
-  //check if sortByField1 and sortByFiel2 is present
+  //checks for sortBy1 and sortBy2
+  if (
+    typeof sortBy1 !== "object" ||
+    !Array.isArray(sortBy1) ||
+    !sortBy1.length === 2
+  )
+    throw new Error("Error: Improper second parameter passed. Check sortBy1");
+
+  //checks for sortBy1 and sortBy2
+  if (
+    typeof sortBy2 !== "object" ||
+    !Array.isArray(sortBy2) ||
+    sortBy2.length !== 2
+  )
+    throw new Error("Error: Improper second parameter passed. Check sortBy2");
+
+  //short way to resolve sortBy1 and sortBy2
+  //probably can be improved.... i dunno sleep deprived!!!!!!!!!!!!!
+  const sortByField1 = sortBy1[0];
+  const sortByField2 = sortBy2[0];
+  const order1 = sortBy1[1];
+  const order2 = sortBy2[1];
+
+  //check if sortByField1 and sortByField2 is present
   if (
     typeof sortByField1 !== "string" ||
     typeof sortByField1 !== "string" ||
@@ -39,6 +56,15 @@ let sortAndFilter = (
     //check if sortByField1 and sortByField2 is defined
     throw new Error("Error: Check Order value");
 
+  //one of potential test case
+  //credits goes to Jackey from slack
+  //https://stevenswebdevs2023.slack.com/archives/C04GT4VC2CW/p1676246406429989
+  if (
+    sortByField1.trim() === sortByField2.trim() &&
+    order1.trim().toLowerCase !== order2.trim().toLowerCase()
+  )
+    throw new Error("Error: Order are improperly defined");
+
   //check if every element is object
   array.forEach((element) => {
     //check if every element is of type object
@@ -49,10 +75,8 @@ let sortAndFilter = (
     if (Object.keys(element).length < 1)
       throw new Error("Error: Every element of array to have atleast one key");
 
-    let firstObjLength = Object.keys(array[0]).length;
-
-    //check if all objects are having same length
-    if (firstObjLength !== Object.keys(element).length) {
+    //check if all objects are having same keys
+    if (!helper.isTwoArrayEqual(Object.keys(array[0]), Object.keys(element))) {
       throw new Error(
         "Error: Expected Every Array element to have common keys"
       );
@@ -81,6 +105,11 @@ let sortAndFilter = (
   ///add error handling
   // deal with J j sort handling
   let filteredArr = array.filter((obj) => obj[filterBy] === filterByTerm);
+
+  //error check for filterByTerm
+  if (filteredArr.length < 1)
+    throw new Error("Error: filterByTerm doesnot exist!!");
+
   let resultArr = filteredArr.sort((a, b) => {
     const order1Lower = order1.toLowerCase();
     const order2Lower = order2.toLowerCase();
