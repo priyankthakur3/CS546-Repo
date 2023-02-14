@@ -127,13 +127,33 @@ const compareTwoObject = (a, b) => {
 };
 
 const getIntersectKeys = (a, b) => {
+  /**
+   * Function to get common keys for two objects
+   * !todo: convert to n elements instead of two elements
+   */
   let resultArr = [];
-  if (typeof a !== "object" && typeof b != "object")
+  // console.log(a, b);
+  //check errors in function
+  if (typeof a !== "object" || typeof b !== "object")
     throw new Error("Error: Expected Two objects");
-  if (Object.keys(a).length < 1 || Object.keys(b).length < 1)
+
+  let keysA = Object.keys(a).map((key) => {
+    if (typeof key !== "string")
+      throw new Error("Error: Expected Object to contain Key");
+    return key.trim();
+  });
+
+  let keysB = Object.keys(b).map((key) => {
+    if (typeof key !== "string")
+      throw new Error("Error: Expected Object to contain Key");
+    return key.trim();
+  });
+
+  // console.log(keysA, keysB);
+  if (keysA.length < 1 || keysB.length < 1)
     throw new Error("Error: Expected Object with size greater than 0");
-  resultArr = Object.keys(a).filter((value) => Object.keys(b).includes(value));
-  return resultArr;
+
+  return keysA.filter((value) => keysB.includes(value));
 };
 
 export {
