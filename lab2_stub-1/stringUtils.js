@@ -2,7 +2,7 @@
       using the ES6 exports syntax. 
       DO NOT CHANGE THE FUNCTION NAMES
 */
-import { getIntersectKeys, keepLowerAplhaNum } from "./helpers.js";
+import { keepLowerAplhaNum } from "./helpers.js";
 let palindromes = (string) => {
   //error check to check if input parameter is array with size greater than zero
   if (typeof string !== "object") {
@@ -30,25 +30,25 @@ let palindromes = (string) => {
       );
     }
 
-    //convert string to lowecase and get rid of all non-alpha numeric characters empty space
+    //convert string to lowercase and get rid of all non-alpha numeric characters empty space
     try {
-      keepLowerAplhaNum(word);
+      return keepLowerAplhaNum(word);
     } catch (e) {
       throw e;
     }
   });
-
+  // console.log(string, stringCleanLower);
   // clean string arr of any non alpha numeric character and convert to lowerCase
   // and reverse string
   let stringReversedArr = string.map((word) =>
     keepLowerAplhaNum(word.split("").reverse().join(""))
   );
   //iterate through string and check if original and reversed string is same
-  for (let index = 0; index < string.length; index++) {
+  for (let index = 0; index < stringCleanLower.length; index++) {
     if (stringReversedArr[index] === stringCleanLower[index]) {
-      resultObject[string[index]] = true;
+      resultObject[stringCleanLower[index]] = true;
     } else {
-      resultObject[string[index]] = false;
+      resultObject[stringCleanLower[index]] = false;
     }
   }
 
@@ -67,7 +67,7 @@ let censorWords = (string, badWordsList) => {
   ///check if badWordsList is array
   if (
     typeof badWordsList !== "object" ||
-    !Array.isArray(string) ||
+    !Array.isArray(badWordsList) ||
     badWordsList.length < 0
   ) {
     throw new Error("Error: Expected badWordsList to be array");
@@ -109,7 +109,22 @@ let censorWords = (string, badWordsList) => {
 };
 
 let distance = (string, word1, word2) => {
-  let regexNonAlphaNumeric = /\W/g;
+  let regexAlphaNumeric = /\w/;
+  let regexNonAlphaNumeric = /\W/;
+  let regexSpace = /[\s\t]/g;
+
+  ///function custom to deal with edge
+  const checkIfWordsExists = (stringWords, wordCheckList) => {
+    stringWords = stringWords.map((word) =>
+      word.replace(/[^a-zA-Z0-9\s]/g, "")
+    );
+    let wordCheckListFiltered = wordCheckList.filter((value) =>
+      stringWords.includes(value)
+    );
+    return wordCheckList.length === wordCheckListFiltered.length;
+  };
+
+  //error checks
   if (
     typeof string !== "string" ||
     typeof word1 !== "string" ||
@@ -122,30 +137,52 @@ let distance = (string, word1, word2) => {
     word2.trim().length === 0
   )
     throw new Error("Error: Parameters must contain string");
+  string = string.toLowerCase();
+  word1 = word1.toLowerCase().trim();
+  word2 = word2.toLowerCase().trim();
 
-  if (word1 === word2)
-    throw new Error("Error: Expected different words for getting index");
+  //error check if words are present or not in String
+  if (word1 === word2) throw new Error("Error: word1 and word2 are same!!!!!!");
 
-  // if (
-  //   !regexNonAlphaNumeric.test(string) ||
-  //   !regexNonAlphaNumeric.test(word1) ||
-  //   !regexNonAlphaNumeric.test(word2)
-  // )
-  //   throw new Error("Error: Input contains non-alphanumeric characters");
+  //error check if string contains atleast one Alpha-Numeric Character
+  if (
+    !regexAlphaNumeric.test(string) ||
+    !regexAlphaNumeric.test(word1) ||
+    !regexAlphaNumeric.test(word2)
+  )
+    throw new Error("Error: Input contains non-alphanumeric characters");
 
-  let words = string.split(" ");
-  if (words.length <= 2)
+  let stringWords = string.split(" ");
+  let word1Words = word1.split(" ");
+  let word2Words = word2.split(" ");
+  if (stringWords.length <= 2)
     throw new Error("Error: String contains less than 2 words");
 
-  let word1Index = words.indexOf(word1);
-  let word2Index = words.indexOf(word2);
+  let word1Index = string.indexOf(word1);
+  let word2Index = string.indexOf(word2);
 
-  //console.log(word1Index, word2Index);
+  if (
+    !checkIfWordsExists(stringWords, word1Words) ||
+    !checkIfWordsExists(stringWords, word2Words)
+  )
+    throw new Error("Error: Either Word1 or Word2 is not present in String");
+  // if (parseInt(word1Index) === -1 || parseInt(word1Index) === -1)
+  //   throw new Error("Error: Either Word1 or Word2 is not present in String");
 
-  if (word1Index >= word2Index)
-    throw new Error("Error: Word1 must appear before Word2");
+  if (parseInt(word1Index) > parseInt(word1Index) === -1)
+    throw new Error("Error: Either Word1 is after Word2");
 
-  return word2Index - word1Index;
+  let splitString = "";
+  let minDistance = Number.MAX_SAFE_INTEGER;
+
+  do {
+    splitString = string.substring(word1Index + word1.length, word2Index + 1);
+    minDistance = Math.min(splitString.match(regexSpace).length);
+    word1Index = string.split(word2Index + 1).indexOf(word1);
+    word2Index = string.split(word2Index + 1).indexOf(word2);
+  } while (word1Index !== -1 || word2Index !== -1);
+
+  return minDistance;
 };
 
 export { palindromes, censorWords, distance };
