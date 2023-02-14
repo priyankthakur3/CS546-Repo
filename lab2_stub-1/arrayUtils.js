@@ -6,9 +6,6 @@
 import * as helper from "./helpers.js";
 
 let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
-  /**
-   * !todo: Check if all error handling is implemented or not
-   */
   //check if array exists
   if (typeof array !== "object") {
     throw new Error("Error: Expected Array");
@@ -55,9 +52,14 @@ let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
   if (!helper.checkOrderValue(order1) || !helper.checkOrderValue(order2))
     //check if sortByField1 and sortByField2 is defined
     throw new Error("Error: Check Order value");
+  if (typeof filterBy !== "string" || filterBy.trim().length === 0)
+    throw new Error("Error: filterBy is not string");
+
+  if (typeof filterByTerm !== "string" || filterByTerm.trim().length === 0)
+    throw new Error("Error: filterByTerm is not string");
 
   //one of potential test case
-  //credits goes to Jackey from slack
+  //credits goes to Jackey
   //https://stevenswebdevs2023.slack.com/archives/C04GT4VC2CW/p1676246406429989
   if (
     sortByField1.trim() === sortByField2.trim() &&
@@ -85,13 +87,12 @@ let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
 
     if (
       !element.hasOwnProperty(sortByField1) ||
-      !element.hasOwnProperty(sortByField2) ||
-      !element.hasOwnProperty(filterBy)
+      !element.hasOwnProperty(sortByField2)
     )
-      throw new Error(
-        `Error: Fields ${sortByField1}, ${sortByField2}, ${filterBy} not present. Please check inputs`
-      );
+      throw new Error(`Error: Input Fields not present. Please check inputs`);
 
+    if (!element.hasOwnProperty(filterBy))
+      throw new Error("Error: Filter Key is not a key in array of object");
     //error check for key type and length of keys
     Object.keys(element).forEach((key) => {
       ///console.log(key.trim(), typeof key, key.length);
@@ -99,11 +100,12 @@ let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
         throw new Error(
           "Error: Expected Every key to be of type String and non-empty"
         );
+
+      if (typeof element[key] !== "string")
+        throw new Error("Error: Expected Every value to string");
     });
   });
 
-  ///add error handling
-  // deal with J j sort handling
   let filteredArr = array.filter((obj) => obj[filterBy] === filterByTerm);
 
   //error check for filterByTerm
@@ -111,6 +113,7 @@ let sortAndFilter = (array, sortBy1, sortBy2, filterBy, filterByTerm) => {
     throw new Error("Error: filterByTerm doesnot exist!!");
 
   let resultArr = filteredArr.sort((a, b) => {
+    //function to sort values
     const order1Lower = order1.toLowerCase();
     const order2Lower = order2.toLowerCase();
 
@@ -157,7 +160,7 @@ let merge = (...args) => {
     }
 
     //flatten element
-    let flattenArray = element.flat();
+    let flattenArray = element.flat(Infinity);
 
     //check if flatten array contains number or string
     flattenArray.forEach((element) => {
