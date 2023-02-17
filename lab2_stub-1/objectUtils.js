@@ -56,7 +56,7 @@ let calculateObject = (object, funcs) => {
     for (let index = 0; index < funcs.length; index++) {
       tempResElm = funcs[index](tempResElm);
     }
-    resultObj[key] = tempResElm.toFixed(2);
+    resultObj[key] = Number(tempResElm.toFixed(2));
   }
   return resultObj;
 };
