@@ -161,6 +161,8 @@ let distance = (string, word1, word2) => {
   let word1Index = string.indexOf(word1);
   let word2Index = string.indexOf(word2);
 
+  console.log(word1Index, word2Index);
+
   if (
     !checkIfWordsExists(stringWords, word1Words) ||
     !checkIfWordsExists(stringWords, word2Words)
@@ -169,8 +171,8 @@ let distance = (string, word1, word2) => {
   // if (parseInt(word1Index) === -1 || parseInt(word1Index) === -1)
   //   throw new Error("Error: Either Word1 or Word2 is not present in String");
 
-  if (parseInt(word1Index) > parseInt(word1Index) === -1)
-    throw new Error("Error: Either Word1 is after Word2");
+  if (parseInt(word1Index) > parseInt(word2Index))
+    throw new Error("Error: Word1 is after Word2");
 
   let splitString = "";
   let minDistance = Number.MAX_SAFE_INTEGER;
