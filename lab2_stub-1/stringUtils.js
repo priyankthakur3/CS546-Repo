@@ -68,9 +68,11 @@ let censorWords = (string, badWordsList) => {
   if (
     typeof badWordsList !== "object" ||
     !Array.isArray(badWordsList) ||
-    badWordsList.length < 0
+    badWordsList.length <= 0
   ) {
-    throw new Error("Error: Expected badWordsList to be array");
+    throw new Error(
+      "Error: Expected badWordsList to be array with one or more element"
+    );
   }
 
   let censorString = ["!", "@", "$", "#"];
@@ -103,7 +105,7 @@ let censorWords = (string, badWordsList) => {
         "Error: Each element in badWordsList must exist in string"
       );
     //replace every badword with mask string
-    string = string.replace(word, maskWords(word));
+    string = string.replaceAll(word, maskWords(word));
   }
   return string;
 };
