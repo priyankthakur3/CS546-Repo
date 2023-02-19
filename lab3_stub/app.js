@@ -13,6 +13,7 @@ Note:
 */
 
 import * as movies from "./movies.js";
+import * as users from "./users.js";
 
 async function main() {
   // try {
@@ -38,12 +39,36 @@ async function main() {
   //     console.log(e);
   //   }
   // }
+  // try {
+  //   const movie = await movies.getMovieById(
+  //     "38fd6885-0271-4650-8afd-6d09f3a890a2"
+  //   );
+  //   console.log(movie);
+  // } catch (e) {
+  //   console.log(e);
+  // }
 
+  //   try {
+  //     const user = await users.getUserById(
+  //       "48fded55-37cd-4e6b-8f19-e78b481a14a4"
+  //     );
+  //     console.log(user);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+
+  // try {
+  //   const userlist = await users.sameGenre("Action");
+  //   console.log(userlist);
+  // } catch (e) {
+  //   console.log(e);
+  // }
   try {
-    const movie = await movies.getMovieById(
-      "38fd6885-0271-4650-8afd-6d09f3a890a2"
+    const moviesReviewedList = await users.moviesReviewed(
+      "64035fad-a5b7-48c9-9317-3e31e22fe26c"
+      //"7989fa5e-5617-43f7-a931-46036f9dbcff"
     );
-    console.log(movie);
+    console.log(moviesReviewedList);
   } catch (e) {
     console.log(e);
   }
