@@ -20,9 +20,11 @@ const findMoviesByDirector = async (directorName) => {
 
   const rawData = await getMovies();
   let filterData = [];
+  directorName = directorName.toLowerCase().trim();
 
   rawData.forEach((movieElm) => {
-    if (movieElm["director"] === directorName) filterData.push(movieElm);
+    if (movieElm["director"].toLowerCase().trim() === directorName)
+      filterData.push(movieElm);
   });
 
   if (filterData.length < 1) throw new Error("No Movies found");
