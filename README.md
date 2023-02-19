@@ -1,8 +1,4 @@
 # Homework Repo for CS546
 
-Repository for hosting CS-546 Assignments 
+Repo for CS-546 Assignments by Priyank Thakur
 
-## Assignments included
-
-Lab 1
-Lab 2
