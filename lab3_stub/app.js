@@ -16,62 +16,176 @@ import * as movies from "./movies.js";
 import * as users from "./users.js";
 
 async function main() {
-  // try {
-  //   const movieByDirector = await movies.findMoviesByDirector(
-  //     "Fernando Dollimore"
-  //   );
-  //   console.log(movieByDirector);
-  // } catch (e) {
-  //   console.log(e);
-  // }
-  // try {
-  //   const movieByActor = await movies.findMoviesByCastMember("Huberto Snoddon");
-  //   console.log(movieByActor);
-  // } catch (e) {
-  //   console.log(e);
-  // }
-  //   try {
-  //     const movieByActor = await movies.getOverallRating(
-  //       "Asterix and the Vikings (Astérix et les Vikings)"
-  //     );
-  //     console.log(movieByActor);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-  // try {
-  //   const movie = await movies.getMovieById(
-  //     "38fd6885-0271-4650-8afd-6d09f3a890a2"
-  //   );
-  //   console.log(movie);
-  // } catch (e) {
-  //   console.log(e);
-  // }
-
-  //   try {
-  //     const user = await users.getUserById(
-  //       "48fded55-37cd-4e6b-8f19-e78b481a14a4"
-  //     );
-  //     console.log(user);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-
-  // try {
-  //   const userlist = await users.sameGenre("Action");
-  //   console.log(userlist);
-  // } catch (e) {
-  //   console.log(e);
-  // }
   try {
-    const moviesReviewedList = await users.moviesReviewed(
-      "64035fad-a5b7-48c9-9317-3e31e22fe26c"
-      //"7989fa5e-5617-43f7-a931-46036f9dbcff"
+    const directorName = "Fernando DOllimore";
+    const movieByDirector = await movies.findMoviesByDirector(directorName);
+    console.log(
+      `Test Case 1: findMoviesByDirector Movies by Director: "${directorName}" \n${JSON.stringify(
+        movieByDirector,
+        null,
+        1
+      )}`
     );
-    console.log(moviesReviewedList);
   } catch (e) {
-    console.log(e);
+    console.log(`Test Case1: findMoviesByDirector failed \n${e.message}`);
   }
+
+  try {
+    const directorName = "Fernando DOllimore";
+    const movieByDirector = await movies.findMoviesByDirector(123);
+    console.log(
+      `Test Case 2: Movies by Director: "${directorName}" \n${JSON.stringify(
+        movieByDirector,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: findMoviesByDirector failed \n${e.message}`);
+  }
+
+  try {
+    const actorName = "Huberto Snoddon";
+    const movieByActor = await movies.findMoviesByCastMember(actorName);
+    console.log(
+      `Test Case1: findMoviesByCastMember Movies by "${actorName}" : \n${JSON.stringify(
+        movieByActor,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: findMoviesByCastMember failed \n${e.message}`);
+  }
+
+  try {
+    const actorName = "John Snow";
+    const movieByActor = await movies.findMoviesByCastMember(actorName);
+    console.log(
+      `Test Case2: findMoviesByCastMember Movies by "${actorName}" : ${JSON.stringify(
+        movieByActor,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: findMoviesByCastMember failed \n${e.message}`);
+  }
+
+  try {
+    const movie = "Asterix and the Vikings (Astérix et les Vikings)";
+    const movieRating = await movies.getOverallRating(movie);
+    console.log(
+      `Test Case1: getOverallRating Rating for "${movie}" : ${JSON.stringify(
+        movieRating,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: getOverallRating failed \n${e.message}`);
+  }
+
+  try {
+    const movie = 123;
+    const movieRating = await movies.getOverallRating(movie);
+    console.log(
+      `Test Case2: getOverallRating Rating for "${movie}" : ${JSON.stringify(
+        movieRating,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: getOverallRating failed \n${e.message}`);
+  }
+
+  try {
+    const movieID = "38fd6885-0271-4650-8afd-6d09f3a890a2";
+    const movie = await movies.getMovieById(movieID);
+    console.log(
+      `Test Case1: getMovieById Movie detail for ID "${movieID}": \n${JSON.stringify(
+        movie,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: getMovieById failed \n${e.message}`);
+  }
+
+  try {
+    const movieID = "38f46885-0271-4650-8afd-6d09f3a890a2";
+    const movie = await movies.getMovieById(movieID);
+    console.log(
+      `Test Case2: getMovieById Movie detail for ID "${movieID}": \n${JSON.stringify(
+        movie,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: getMovieById failed \n${e.message}`);
+  }
+
+  try {
+    const userID = "64035fad-a5b7-48c9-9317-3e31e22fe26c";
+    const user = await users.getUserById(userID);
+    console.log(
+      `Test Case1: getUserById Movie detail for ID "${userID}" : \n${JSON.stringify(
+        user,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: getUserById failed \n${e.message}`);
+  }
+
+  try {
+    const userID = "7989fa5e-5617-43f7-a931-46036f9dbcff";
+    const user = await users.getUserById(userID);
+    console.log(
+      `Test Case2: getUserById Movie detail for ID ${userID}: \n${JSON.stringify(
+        user,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: getUserById failed \n${e.message}`);
+  }
+
+  try {
+    const genre = "Action";
+    const userList = await users.sameGenre(genre);
+    console.log(
+      `Test Case1: sameGenre User List for "${genre}": \n${JSON.stringify(
+        userList,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: sameGenre failed \n${e.message}`);
+  }
+  //   try {
+  //     const moviesReviewedList = await users.moviesReviewed(
+  //       "64035fad-a5b7-48c9-9317-3e31e22fe26c"
+  //     );
+  //     console.log(moviesReviewedList);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+
+  // try {
+  //   const recomendedMovies = await users.referMovies(
+  //     "03cff5e0-61e4-449f-8591-ddbb58aa2ca7"
+  //   );
+  //   console.log(recomendedMovies);
+  // } catch (e) {
+  //   console.log(e);
+  // }
 }
 
 //call main
