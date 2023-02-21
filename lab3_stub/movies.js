@@ -1,24 +1,35 @@
 //TODO EXPORT AND IMPLEMENT THE FOLLOWING FUNCTIONS IN ES6 FORMAT
 //Movie data link: https://gist.githubusercontent.com/jdelrosa/78dfa36561d5c06f7e62d8cce868cf8e/raw/2292be808f74c9486d4085bdbc2025bab84d462b/movies.json
 
-/**
- * !todo: fix getOverallRating rating to single digit
- */
 import axios from "axios";
 
 async function getMovies() {
+  // const { data } = await axios
+  //   .get(
+  //     "https://gist.githubusercontent.com/jdelrosa/78dfa36561d5c06f7e62d8cce868cf8e/raw/2292be808f74c9486d4085bdbc2025bab84d462sb/movies.json"
+  //   )
+  //   .catch((err) => {
+  //     throw err;
+  //   });
+
   const { data } = await axios.get(
     "https://gist.githubusercontent.com/jdelrosa/78dfa36561d5c06f7e62d8cce868cf8e/raw/2292be808f74c9486d4085bdbc2025bab84d462b/movies.json"
   );
+
   return data; // this will be the array of user objects
 }
 
 const findMoviesByDirector = async (directorName) => {
-  if (typeof directorName !== "string" && directorName.trim().length < 1) {
+  if (typeof directorName !== "string" || directorName.trim().length < 1) {
     throw new Error("Expected directorName to be non Empty String");
   }
-
-  const rawData = await getMovies();
+  let rawData;
+  try {
+    rawData = await getMovies();
+  } catch (error) {
+    throw Error;
+  }
+  // const rawData = await getMovies();
   let filterData = [];
   directorName = directorName.toLowerCase().trim();
 
@@ -33,18 +44,21 @@ const findMoviesByDirector = async (directorName) => {
 };
 
 const findMoviesByCastMember = async (castMemberName) => {
-  if (typeof castMemberName !== "string" && castMemberName.trim().length < 1) {
+  if (typeof castMemberName !== "string" || castMemberName.trim().length < 1) {
     throw new Error("Expected castMemberName to be non Empty String");
   }
 
+  castMemberName = castMemberName.trim().toLowerCase();
   const rawData = await getMovies();
   let filterData = [];
 
   rawData.forEach((movie) => {
-    if (rawData.hasOwnProperty("cast")) {
+    if (movie.hasOwnProperty("cast")) {
       let castMembers = movie["cast"];
+
       for (let cast of castMembers) {
-        if (cast === castMemberName) filterData.push(movie);
+        if (cast.trim().toLowerCase() === castMemberName)
+          filterData.push(movie);
       }
     }
   });
@@ -55,7 +69,7 @@ const findMoviesByCastMember = async (castMemberName) => {
 };
 
 const getOverallRating = async (title) => {
-  if (typeof title !== "string" && title.trim().length < 1) {
+  if (typeof title !== "string" || title.trim().length < 1) {
     throw new Error("Expected title to be non Empty String");
   }
 
@@ -74,19 +88,22 @@ const getOverallRating = async (title) => {
 
   avgRating = avgRating / ratingUserCount;
 
+  avgRating = Math.trunc(avgRating) + Math.floor((avgRating % 1) * 10) / 10;
+
   return avgRating;
 };
 
 const getMovieById = async (id) => {
-  if (typeof id !== "string" && id.trim().length < 1)
+  if (typeof id !== "string" || id.trim().length < 1)
     throw new Error("Expected castMemberName to be non Empty String");
   const rawData = await getMovies();
+  id = id.trim().toLowerCase();
 
   let finalMovie;
 
   rawData.forEach((movieObj) => {
     if (movieObj.hasOwnProperty("id")) {
-      if (movieObj["id"] === id) {
+      if (movieObj["id"].trim().toLowerCase() === id) {
         finalMovie = movieObj;
         return;
       }
