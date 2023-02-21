@@ -13,14 +13,14 @@ const getUserById = async (id) => {
   if (typeof id !== "string" || id.trim().length < 1)
     throw new Error("Expected ID to be string");
 
-  id = id.trim();
+  id = id.trim().toLowerCase();
 
   const allUsers = await getUsers();
   let finalUser;
 
   allUsers.forEach((user) => {
     if (user.hasOwnProperty("id")) {
-      if (user["id"] === id) {
+      if (user["id"].trim().toLowerCase() === id) {
         finalUser = user;
         return;
       }
@@ -42,7 +42,7 @@ const sameGenre = async (genre) => {
   let resultUsers = [];
   allUsers.forEach((user) => {
     if (user.hasOwnProperty("favorite_genre")) {
-      if (user["favorite_genre"].toLowerCase() === genre) {
+      if (user["favorite_genre"].trim().toLowerCase() === genre) {
         let userName = [user["first_name"].trim(), user["last_name"].trim()];
         finalUsers.push(userName);
         if (finalUsers.length === 50) return;
@@ -59,14 +59,18 @@ const sameGenre = async (genre) => {
     let b_lastName = b[1];
     let b_firstName = b[0];
 
+    //Sort by Last Name
     if (a_lastName > b_lastName) return 1;
     else if (a_lastName < b_lastName) return -1;
+    //if Last Name is same then sort by First Name
     else {
       if (a_firstName > b_firstName) return 1;
       else if (a_firstName < b_firstName) return -1;
+      else return 0;
     }
   });
 
+  //build final output list
   for (let user of finalUsers) {
     resultUsers.push(`${user[0]} ${user[1]}`);
   }
@@ -75,36 +79,47 @@ const sameGenre = async (genre) => {
 };
 
 const moviesReviewed = async (id) => {
-  /**
-   * !todo: add more check for review
-   *
-   */
   if (typeof id !== "string" || id.trim().length < 1)
     throw new Error("Expected id to be string");
 
+  id = id.trim().toLowerCase();
+
   let allMovies = await getMovies();
+  let user;
 
   try {
-    let user = await getUserById(id);
+    user = await getUserById(id);
   } catch (e) {
     throw e;
   }
 
   //error check if user exists
   if (typeof user !== "object" || !user.hasOwnProperty("id"))
-    throw new Error("User Not Found");
+    throw new Error("ER User Not Found");
 
   let moviesReviewedList = [];
 
+  //loop through all movies
   for (let movie of allMovies) {
+    //check if reviews property exists
     if (movie.hasOwnProperty("reviews")) {
       for (let review of movie["reviews"]) {
-        if (review.hasOwnProperty("username")) {
-          if (
-            review["username"].trim().toLowerCase() ===
-            user["username"].trim().toLowerCase()
-          ) {
-            let tempObj = {};
+        //check if review obj has username, rating and review property
+        if (
+          review.hasOwnProperty("username") &&
+          review.hasOwnProperty("rating") &&
+          review.hasOwnProperty("review")
+        ) {
+          let reviewUsername = review["username"].trim().toLowerCase();
+          let ratingReview = review["rating"];
+          let reviewText = review["review"].trim().toLowerCase();
+          if (reviewUsername === user["username"].trim().toLowerCase()) {
+            //build final output Obj for list
+            let tempObj = {
+              username: reviewUsername,
+              rating: Number(ratingReview),
+              review: reviewText,
+            };
             tempObj[movie["title"]] = review;
             moviesReviewedList.push(tempObj);
           }
@@ -116,6 +131,52 @@ const moviesReviewed = async (id) => {
   return moviesReviewedList;
 };
 
-const referMovies = async (id) => {};
+const referMovies = async (id) => {
+  if (typeof id !== "string" || id.trim().length < 1)
+    throw new Error("Expected id to be string");
+
+  let allMovies = await getMovies();
+  let reviewedMoviesUser;
+  let user;
+  let recomendedMoviesList = [];
+
+  //get all user properties for id
+  try {
+    user = await getUserById(id);
+  } catch (e) {
+    throw e;
+  }
+
+  //get list of all movies reviewed by user
+  try {
+    reviewedMoviesUser = await moviesReviewed(id);
+  } catch (e) {
+    throw e;
+  }
+
+  //error check if user exists
+  if (typeof user !== "object" || !user.hasOwnProperty("id"))
+    throw new Error("ER User Not Found");
+
+  //check if "favorite_genre" property exists
+  if (!user.hasOwnProperty("favorite_genre"))
+    throw new Error("Genre not found in User details");
+
+  for (let movie of allMovies) {
+    //check if movie has genre
+    if (!movie.hasOwnProperty("genre")) continue;
+
+    let movieGenre = movie["genre"].split("|");
+
+    //check if user favorite genre matches movies genre and if has already given review for movie
+    //if not then add movie in recomendation list
+    if (
+      movieGenre.includes(user["favorite_genre"]) &&
+      !Object.keys(reviewedMoviesUser).includes(movie["title"])
+    )
+      recomendedMoviesList.push(movie["title"]);
+  }
+  return recomendedMoviesList;
+};
 
 export { getUserById, sameGenre, moviesReviewed, referMovies };
