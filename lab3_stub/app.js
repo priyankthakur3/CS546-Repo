@@ -27,7 +27,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: findMoviesByDirector failed \n${e.message}`);
+    console.log(`Test Case1: findMoviesByDirector failed Error: ${e.message}`);
   }
 
   try {
@@ -41,7 +41,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case2: findMoviesByDirector failed \n${e.message}`);
+    console.log(`Test Case2: findMoviesByDirector failed Error: ${e.message}`);
   }
 
   try {
@@ -55,7 +55,9 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: findMoviesByCastMember failed \n${e.message}`);
+    console.log(
+      `Test Case1: findMoviesByCastMember failed Error: ${e.message}`
+    );
   }
 
   try {
@@ -69,11 +71,13 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case2: findMoviesByCastMember failed \n${e.message}`);
+    console.log(
+      `Test Case2: findMoviesByCastMember failed Error: ${e.message}`
+    );
   }
 
   try {
-    const movie = "Asterix and the Vikings (Astérix et les Vikings)";
+    const movie = "ASterix and the Vikings (Astérix et les Vikings)";
     const movieRating = await movies.getOverallRating(movie);
     console.log(
       `Test Case1: getOverallRating Rating for "${movie}" : ${JSON.stringify(
@@ -83,7 +87,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: getOverallRating failed \n${e.message}`);
+    console.log(`Test Case1: getOverallRating failed Error: ${e.message}`);
   }
 
   try {
@@ -97,7 +101,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case2: getOverallRating failed \n${e.message}`);
+    console.log(`Test Case2: getOverallRating failed Error: ${e.message}`);
   }
 
   try {
@@ -111,7 +115,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: getMovieById failed \n${e.message}`);
+    console.log(`Test Case1: getMovieById failed Error: ${e.message}`);
   }
 
   try {
@@ -125,7 +129,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case2: getMovieById failed \n${e.message}`);
+    console.log(`Test Case2: getMovieById failed Error: ${e.message}`);
   }
 
   try {
@@ -139,7 +143,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: getUserById failed \n${e.message}`);
+    console.log(`Test Case1: getUserById failed Error: ${e.message}`);
   }
 
   try {
@@ -153,7 +157,7 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case2: getUserById failed \n${e.message}`);
+    console.log(`Test Case2: getUserById failed Error: ${e.message}`);
   }
 
   try {
@@ -167,25 +171,77 @@ async function main() {
       )}`
     );
   } catch (e) {
-    console.log(`Test Case1: sameGenre failed \n${e.message}`);
+    console.log(`Test Case1: sameGenre failed Error: ${e.message}`);
   }
-  //   try {
-  //     const moviesReviewedList = await users.moviesReviewed(
-  //       "64035fad-a5b7-48c9-9317-3e31e22fe26c"
-  //     );
-  //     console.log(moviesReviewedList);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
 
-  // try {
-  //   const recomendedMovies = await users.referMovies(
-  //     "03cff5e0-61e4-449f-8591-ddbb58aa2ca7"
-  //   );
-  //   console.log(recomendedMovies);
-  // } catch (e) {
-  //   console.log(e);
-  // }
+  try {
+    const genre = "(no genres listed)";
+    const userList = await users.sameGenre(genre);
+    console.log(
+      `Test Case2: sameGenre User List for "${genre}": \n${JSON.stringify(
+        userList,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: sameGenre failed Error: ${e.message}`);
+  }
+  try {
+    const userID = "64035fad-a5b7-48c9-9317-3e31e22fe26c";
+    const moviesReviewedList = await users.moviesReviewed(userID);
+    console.log(
+      `Test Case1: moviesReviewedList  List for "${userID}": \n${JSON.stringify(
+        moviesReviewedList,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: moviesReviewedList failed Error: ${e.message}`);
+  }
+
+  try {
+    const userID = NaN;
+    const moviesReviewedList = await users.moviesReviewed(userID);
+    console.log(
+      `Test Case2: moviesReviewedList  List for "${userID}": \n${JSON.stringify(
+        moviesReviewedList,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case2: moviesReviewedList failed Error: ${e.message}`);
+  }
+
+  try {
+    const userID = "03cff5e0-61e4-449f-8591-ddbb58aa2ca7";
+    const recomendedMovies = await users.referMovies(userID);
+    console.log(
+      `Test Case1: recomendedMovies  List for "${userID}": \n${JSON.stringify(
+        recomendedMovies,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: recomendedMovies failed Error: ${e.message}`);
+  }
+
+  try {
+    const userID = "5060fc9e-10c7-4f38-9f3d-47b7f477568b";
+    const recomendedMovies = await users.referMovies(userID);
+    console.log(
+      `Test Case1: recomendedMovies  List for "${userID}": \n${JSON.stringify(
+        recomendedMovies,
+        null,
+        1
+      )}`
+    );
+  } catch (e) {
+    console.log(`Test Case1: recomendedMovies failed Error: ${e.message}`);
+  }
 }
 
 //call main
