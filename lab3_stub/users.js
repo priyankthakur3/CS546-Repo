@@ -1,6 +1,6 @@
 //TODO EXPORT AND IMPLEMENT THE FOLLOWING FUNCTIONS IN ES6 FORMAT
 //User data link: https://gist.githubusercontent.com/jdelrosa/381cbe8fae75b769a1ce6e71bdb249b5/raw/564a41f84ab00655524a8cbd9f30b0409836ee39/users.json
-import axios, { all } from "axios";
+import axios from "axios";
 import { getMovies } from "./movies.js";
 async function getUsers() {
   const { data } = await axios.get(
@@ -115,13 +115,55 @@ const moviesReviewed = async (id) => {
           let reviewText = review["review"].trim().toLowerCase();
           if (reviewUsername === user["username"].trim().toLowerCase()) {
             //build final output Obj for list
-            let tempObj = {
+            let movieReviewObj = {};
+            let movieReviewObjProp = {
               username: reviewUsername,
               rating: Number(ratingReview),
               review: reviewText,
             };
-            tempObj[movie["title"]] = review;
-            moviesReviewedList.push(tempObj);
+            movieReviewObj[movie["title"]] = movieReviewObjProp;
+            moviesReviewedList.push(movieReviewObj);
+          }
+        }
+      }
+    }
+  }
+
+  return moviesReviewedList;
+};
+
+const moviesReviewedID = async (id) => {
+  //function same as moviesReviewed but will return ID of reviewed movies
+  if (typeof id !== "string" || id.trim().length < 1)
+    throw new Error("Expected id to be string");
+
+  id = id.trim().toLowerCase();
+
+  let allMovies = await getMovies();
+  let user;
+
+  try {
+    user = await getUserById(id);
+  } catch (e) {
+    throw e;
+  }
+
+  //error check if user exists
+  if (typeof user !== "object" || !user.hasOwnProperty("id"))
+    throw new Error("ER User Not Found");
+
+  let moviesReviewedList = [];
+
+  //loop through all movies
+  for (let movie of allMovies) {
+    //check if reviews property exists
+    if (movie.hasOwnProperty("reviews")) {
+      for (let review of movie["reviews"]) {
+        //check if review obj has username, rating and review property
+        if (review.hasOwnProperty("username")) {
+          let reviewUsername = review["username"].trim().toLowerCase();
+          if (reviewUsername === user["username"].trim().toLowerCase()) {
+            moviesReviewedList.push(movie["id"]);
           }
         }
       }
@@ -136,9 +178,10 @@ const referMovies = async (id) => {
     throw new Error("Expected id to be string");
 
   let allMovies = await getMovies();
-  let reviewedMoviesUser;
   let user;
   let recomendedMoviesList = [];
+  let userReviewedMovies;
+  let userReviewedMoviesArr = [];
 
   //get all user properties for id
   try {
@@ -147,12 +190,19 @@ const referMovies = async (id) => {
     throw e;
   }
 
-  //get list of all movies reviewed by user
+  //get all movies reviewed by id
   try {
-    reviewedMoviesUser = await moviesReviewed(id);
+    userReviewedMovies = await moviesReviewedID(id);
   } catch (e) {
     throw e;
   }
+
+  //build reviewed movies array for simplified checking at end
+  userReviewedMovies.forEach((element) => {
+    userReviewedMoviesArr.push(Object.keys(element));
+  });
+
+  userReviewedMoviesArr = userReviewedMoviesArr.flat(Infinity);
 
   //error check if user exists
   if (typeof user !== "object" || !user.hasOwnProperty("id"))
@@ -167,16 +217,20 @@ const referMovies = async (id) => {
     if (!movie.hasOwnProperty("genre")) continue;
 
     let movieGenre = movie["genre"].split("|");
-
-    //check if user favorite genre matches movies genre and if has already given review for movie
-    //if not then add movie in recomendation list
-    if (
-      movieGenre.includes(user["favorite_genre"]) &&
-      !Object.keys(reviewedMoviesUser).includes(movie["title"])
-    )
-      recomendedMoviesList.push(movie["title"]);
+    //check if movies genre matches user favorite genre
+    if (movieGenre.includes(user["favorite_genre"])) {
+      if (!userReviewedMovies.includes(movie["id"])) {
+        recomendedMoviesList.push(movie["title"]);
+      }
+    }
   }
   return recomendedMoviesList;
 };
 
-export { getUserById, sameGenre, moviesReviewed, referMovies };
+export {
+  getUserById,
+  sameGenre,
+  moviesReviewed,
+  referMovies,
+  moviesReviewedID,
+};
