@@ -1,6 +1,6 @@
 //TODO EXPORT AND IMPLEMENT THE FOLLOWING FUNCTIONS IN ES6 FORMAT
 //User data link: https://gist.githubusercontent.com/jdelrosa/381cbe8fae75b769a1ce6e71bdb249b5/raw/564a41f84ab00655524a8cbd9f30b0409836ee39/users.json
-import axios from "axios";
+import axios, { all } from "axios";
 import { getMovies } from "./movies.js";
 async function getUsers() {
   const { data } = await axios.get(
@@ -40,15 +40,27 @@ const sameGenre = async (genre) => {
   let allUsers = await getUsers();
   let finalUsers = [];
   let resultUsers = [];
-  allUsers.forEach((user) => {
+
+  for (let user of allUsers) {
     if (user.hasOwnProperty("favorite_genre")) {
       if (user["favorite_genre"].trim().toLowerCase() === genre) {
         let userName = [user["first_name"].trim(), user["last_name"].trim()];
         finalUsers.push(userName);
-        if (finalUsers.length === 50) return;
+        if (finalUsers.length === 50) break;
       }
     }
-  });
+  }
+
+  //below error code
+  // allUsers.forEach((user) => {
+  //   if (user.hasOwnProperty("favorite_genre")) {
+  //     if (user["favorite_genre"].trim().toLowerCase() === genre) {
+  //       let userName = [user["first_name"].trim(), user["last_name"].trim()];
+  //       finalUsers.push(userName);
+  //       if (finalUsers.length === 50) return;
+  //     }
+  //   }
+  // });
 
   if (finalUsers.length <= 2)
     throw new Error("There are not two people with that genre");
@@ -60,13 +72,14 @@ const sameGenre = async (genre) => {
     let b_firstName = b[0];
 
     //Sort by Last Name
-    if (a_lastName > b_lastName) return 1;
-    else if (a_lastName < b_lastName) return -1;
-    //if Last Name is same then sort by First Name
+    if (a_lastName !== b_lastName) return a_lastName.localeCompare(b_lastName);
+    // else if (a_lastName < b_lastName) return -1;
+    // //if Last Name is same then sort by First Name
     else {
-      if (a_firstName > b_firstName) return 1;
-      else if (a_firstName < b_firstName) return -1;
-      else return 0;
+      return a_firstName.localeCompare(b_firstName);
+      // if (a_firstName > b_firstName) return 1;
+      // else if (a_firstName < b_firstName) return -1;
+      // else return 0;
     }
   });
 
@@ -110,10 +123,13 @@ const moviesReviewed = async (id) => {
           review.hasOwnProperty("rating") &&
           review.hasOwnProperty("review")
         ) {
-          let reviewUsername = review["username"].trim().toLowerCase();
+          let reviewUsername = review["username"].trim();
           let ratingReview = review["rating"];
-          let reviewText = review["review"].trim().toLowerCase();
-          if (reviewUsername === user["username"].trim().toLowerCase()) {
+          let reviewText = review["review"].trim();
+          if (
+            reviewUsername.toLowerCase() ===
+            user["username"].trim().toLowerCase()
+          ) {
             //build final output Obj for list
             let movieReviewObj = {};
             let movieReviewObjProp = {
