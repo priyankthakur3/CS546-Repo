@@ -84,6 +84,7 @@ const create = async (
 
 const getAll = async () => {
   const bandsColl = await bands();
+
   let bandsList = await bandsColl.find({}).toArray();
   bandsList = bandsList.map((element) => {
     element._id = element._id.toString();
@@ -154,7 +155,7 @@ const rename = async (id, newName) => {
   // will take of instance where is not found in database
   const currentBand = await get(id);
 
-  if (currentBand["name"] === newName)
+  if (currentBand["name"].toLowerCase() === newName.toLowerCase())
     throw new Error("Existing and New Band Name is same!!");
 
   const bandCol = await bands();
