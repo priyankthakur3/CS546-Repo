@@ -12,7 +12,7 @@ const create = async (
   yearBandWasFormed
 ) => {
   /**
-   * !todo:
+   *
    */
   try {
     name = isString("name", name);
