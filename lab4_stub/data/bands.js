@@ -12,7 +12,7 @@ const create = async (
   yearBandWasFormed
 ) => {
   /**
-   * !todo:
+   *
    */
   if (typeof name !== "string" || name.trim().length < 1)
     throw new Error("Expected name to be String");
