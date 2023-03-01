@@ -155,7 +155,7 @@ const rename = async (id, newName) => {
   // will take of instance where is not found in database
   const currentBand = await get(id);
 
-  if (currentBand["name"].toLowerCase() === newName.toLowerCase())
+  if (currentBand["name"] === newName)
     throw new Error("Existing and New Band Name is same!!");
 
   const bandCol = await bands();
