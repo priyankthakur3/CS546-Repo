@@ -132,7 +132,7 @@ const remove = async (id) => {
   if (bandDelete["lastErrorObject"]["n"] === 0)
     throw new Error(`Unable to delete Record for ID: ${id}`);
 
-  console.log(bandDelete);
+  //console.log(bandDelete);
 
   if (bandDelete.hasOwnProperty("value"))
     return `${bandDelete["value"]["name"]} has been successfully deleted!`;
