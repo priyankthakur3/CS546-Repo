@@ -4,3 +4,4 @@
 test.js
 test.mjs
 *.bak
+**/package-lock.json
