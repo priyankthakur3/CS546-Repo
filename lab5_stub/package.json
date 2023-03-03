@@ -1,0 +1,14 @@
+{
+  "name": "cs-546-lab-5",
+  "version": "1.0.0",
+  "description": "My Lab 5 Module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Priyank Thakur 20009546",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
