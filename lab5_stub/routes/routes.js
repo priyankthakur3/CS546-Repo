@@ -19,7 +19,7 @@ const router = Router();
 
 router.route("/aboutme").get(async (req, res) => {
   try {
-    return res.send(aboutme["aboutme"]);
+    return res.status(200).json(aboutme["aboutme"]);
   } catch (e) {
     res.status(404).json(e);
   }
@@ -27,14 +27,14 @@ router.route("/aboutme").get(async (req, res) => {
 
 router.route("/mystory").get(async (req, res) => {
   try {
-    return res.json(mystory.myStory);
+    return res.status(200).json(mystory.myStory);
   } catch (e) {
     res.status(404).json(e);
   }
 });
 router.route("/educationhistory").get(async (req, res) => {
   try {
-    return res.json(educationhistory["myEducationHistory"]);
+    return res.status(200).json(educationhistory["myEducationHistory"]);
   } catch (e) {
     res.status(404).json(e);
   }
