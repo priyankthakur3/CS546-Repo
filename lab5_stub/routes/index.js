@@ -5,7 +5,7 @@ const constructorMethod = (app) => {
   app.use("/", routerRoutes);
 
   app.use("*", (req, res) => {
-    res.status(404).json({ error: "Not found" });
+    res.status(404).json({ error: "Bummer!!! Page Not Found" });
   });
 };
 
