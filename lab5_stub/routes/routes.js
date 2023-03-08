@@ -11,9 +11,9 @@ import the router and create the follow routes using the GET http method
 export the router */
 
 import { Router } from "express";
-import mystory from "../data/mystory.js";
-import aboutme from "../data/aboutme.js";
-import educationhistory from "../data/educationhistory.js";
+import mystory from "../helpers.js";
+import aboutme from "../helpers.js";
+import educationhistory from "../helpers.js";
 
 const router = Router();
 
