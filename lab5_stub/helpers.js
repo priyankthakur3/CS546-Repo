@@ -15,15 +15,6 @@ const aboutme = {
 
 const myEducationHistory = [
   {
-    schoolName: "St. Xavier's High School",
-    degreeEarned: "Secondary School Certificate",
-    numberOfYearsAttended: 10,
-    favoriteClasses: ["Physics", "Computer Labs", "History", "Geography"],
-    favoriteSchoolMemory:
-      "Trying to do skating in our school shoes on polished granite every day while moving from one lecture to another.",
-  },
-
-  {
     schoolName: "Wamanrao Muranjan Jr College",
     degreeEarned: "H.S. Diploma",
     numberOfYearsAttended: 2,
@@ -44,6 +35,19 @@ const myEducationHistory = [
     ],
     favoriteSchoolMemory:
       "Playing Box Cricket in college parking lot with entire boys from my class every day once monsoon season was over and having a blast just teasing each other and having our own version of stupid commentary while playing. Also having some intense training for annual college sports day and cheering for Comps department to win GC trophy every year.",
+  },
+
+  {
+    schoolName: "Stevens Institute of Technology",
+    degreeEarned: "Masters",
+    numberOfYearsAttended: 1,
+    favoriteClasses: [
+      "Engineering Python",
+      "Data Acquisition, Modeling and Analysis",
+      "Realtime Embeded System",
+    ],
+    favoriteSchoolMemory:
+      "Fall trip we took to Delaware Water Gap we took as a Group and got to see such awesome natural colors for the first time.",
   },
 ];
 
