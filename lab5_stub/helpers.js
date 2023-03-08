@@ -16,9 +16,9 @@ const aboutme = {
 const myEducationHistory = [
   {
     schoolName: "St. Xavier's High School",
-    degreeEarned: "SSC",
+    degreeEarned: "Secondary School Certificate",
     numberOfYearsAttended: 10,
-    favoriteClasses: ["Physics", "Computer Labs", "History"],
+    favoriteClasses: ["Physics", "Computer Labs", "History", "Geography"],
     favoriteSchoolMemory:
       "Trying to do skating in our school shoes on polished granite every day while moving from one lecture to another.",
   },
@@ -27,7 +27,7 @@ const myEducationHistory = [
     schoolName: "Wamanrao Muranjan Jr College",
     degreeEarned: "H.S. Diploma",
     numberOfYearsAttended: 2,
-    favoriteClasses: ["Physics", "Computer Science 1", "Chemistry"],
+    favoriteClasses: ["Physics", "Computer Science", "Chemistry"],
     favoriteSchoolMemory:
       "One time, while skipping a lecture with my buddies, we were almost caught red-handed by Vice-Principal of our Junior college, prompting us to quickly duck below a nearby wall evading a watchful predator.",
   },
@@ -51,6 +51,6 @@ const myStory = {
   storyTitle: "Captian Macklemore's Journey to Unknown",
   storyGenre: "Fiction",
   story:
-    "Its year 2040. Humanity has reached Mars and has been looking forward to reach further parts of our solar system.\nCaptian John Macklemore has been chosen to guide team of 10 hand picked astrounauts to lead them on their journey to Pluto. But in order to gain \n.\nLike this.",
+    "Its year 2040, Humanity has reached Mars and has been looking forward to reach further parts of our solar system.\nCaptian John Macklemore has been chosen to guide team of 10 hand picked astrounauts to lead them on their journey to Pluto.\nBut in order to gain their trust he has to work with them and guide them in critical scenario\nAt the end Captain Macklemore ends up being a good friend and like a family member to all.",
 };
 export default { aboutme, myEducationHistory, myStory };
