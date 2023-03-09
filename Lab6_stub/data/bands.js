@@ -168,22 +168,18 @@ const update = async (
 
   const currentBand = await get(id);
 
-  const bandCol = await bands();
-
-  const updateBand = {
-    name: newName,
-    genre: currentBand["genre"],
-    website: currentBand["website"],
-    recordCompany: currentBand["recordCompany"],
-    groupMembers: currentBand["groupMembers"],
-    yearBandWasFormed: currentBand["yearBandWasFormed"],
-    albums: currentBand["albums"],
-    overallRating: currentBand["overallRating"],
-  };
-
   const updatedBand = await bandCol.findOneAndUpdate(
     { _id: new ObjectId(id) },
-    { $set: updateBand },
+    {
+      $set: {
+        name,
+        genre,
+        website,
+        recordCompany,
+        groupMembers,
+        yearBandWasFormed,
+      },
+    },
     { returnDocument: "after" }
   );
 
@@ -192,3 +188,5 @@ const update = async (
   updatedBand["value"]["_id"] = updatedBand["value"]["_id"].toString();
   return updatedBand["value"];
 };
+
+export { create, get, getAll, remove, update };
