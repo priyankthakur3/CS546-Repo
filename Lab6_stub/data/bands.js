@@ -162,7 +162,7 @@ const update = async (
 
   try {
     groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
-  } catch (error) {
+  } catch (err) {
     throw error;
   }
 
