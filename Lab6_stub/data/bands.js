@@ -1,6 +1,8 @@
 // This data file should export all functions using the ES6 standard as shown in the lecture code
 import { bands } from "../config/mongoCollections.js";
-import { checkNonEmptyStrArr, isString } from "../helpers.js";
+import { ObjectId } from "mongodb";
+
+import { checkNonEmptyStrArr, isString, isURL, isID } from "../helpers.js";
 const create = async (
   name,
   genre,
@@ -56,8 +58,8 @@ const create = async (
     overallRating: 0,
   };
 
-  const bandsColl = await bands();
-  const bandInfo = await bandsColl.insertOne(newBand);
+  const bandsCol = await bands();
+  const bandInfo = await bandsCol.insertOne(newBand);
 
   if (!bandInfo.acknowledged || !bandInfo.insertedId)
     throw "Could not add Band";
@@ -72,7 +74,7 @@ const create = async (
 const getAll = async () => {
   const bandCol = await bands();
 
-  let bandsList = await bandsColl.find({}).toArray();
+  let bandsList = await bandCol.find({}).toArray();
   bandsList = bandsList.map((element) => {
     element._id = element._id.toString();
     return element;
@@ -97,6 +99,12 @@ const get = async (id) => {
 
   bandDetail["_id"] = bandDetail["_id"].toString();
   bandsCol.close;
+
+  if (bandDetail.albums.length > 0) {
+    for (let i = 0; i < bandDetail.albums.length; i++) {
+      bandDetail.albums[i]._id = bandDetail.albums[i]._id.toString();
+    }
+  }
 
   return bandDetail;
 };
