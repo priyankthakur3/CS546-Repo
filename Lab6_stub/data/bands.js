@@ -77,6 +77,13 @@ const getAll = async () => {
   let bandsList = await bandCol.find({}).toArray();
   bandsList = bandsList.map((element) => {
     element._id = element._id.toString();
+
+    if (element.albums.length > 0) {
+      for (let i = 0; i < element.albums.length; i++) {
+        element.albums[i]._id = element.albums[i]._id.toString();
+      }
+    }
+
     return element;
   });
   return bandsList;
