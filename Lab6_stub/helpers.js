@@ -61,7 +61,7 @@ const checkNonEmptyStrArr = (arrName, arrVal) => {
   if (typeof arrName !== "string" || arrName.trim().length < 1)
     throw new Error(`Expected arrName to be non-empty String`);
 
-  if (!Array.isArray(arrVal) || arrVal.length() < 1)
+  if (!Array.isArray(arrVal) || arrVal.length < 1)
     throw new Error(`Expected ${arrName} to be non-empty Array`);
 
   for (let i = 0; i < arrVal.length; i++) {
