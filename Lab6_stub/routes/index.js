@@ -5,3 +5,15 @@
     - When the route is /albums use the routes defined in albums.js routing file
     - All other enpoints should respond with a 404 as shown in the lecture code
 */
+import albumsRoutes from "../routes/albums.js";
+import bandsRoutes from "../routes/bands.js";
+
+const constructorMethod = (app) => {
+  app.use("/bands", bandsRoutes);
+  app.use("/albums", albumsRoutes);
+  app.use("*", (req, res) => {
+    res.status(404).json({ error: "Bummer!!! Page Not Found" });
+  });
+};
+
+export default constructorMethod;
