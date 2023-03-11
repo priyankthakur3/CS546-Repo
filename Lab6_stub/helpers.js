@@ -58,6 +58,11 @@ const isURL = (varName, varVal) => {
 };
 
 const checkNonEmptyStrArr = (arrName, arrVal) => {
+  /**
+   * Function to check if Input Array Contains
+   * Input Variable Name, Variable Value in String
+   * Return type: Array of Trimed Elements in String
+   */
   if (typeof arrName !== "string" || arrName.trim().length < 1)
     throw new Error(`Expected arrName to be non-empty String`);
 
@@ -71,6 +76,11 @@ const checkNonEmptyStrArr = (arrName, arrVal) => {
 };
 
 const checkReleaseYear = (yearVal) => {
+  /**
+   * Function to check if input value is betwen 1900 and next Year
+   * Input Variable Value in String
+   * Return type: year in Number
+   */
   if (typeof yearVal !== "number")
     throw new Error("Error Expected Year to number");
   if (yearVal < 1900 || yearVal > new Date().getFullYear() + 1)
@@ -79,4 +89,42 @@ const checkReleaseYear = (yearVal) => {
     );
   return yearVal;
 };
-export { isID, isString, isURL, checkNonEmptyStrArr, checkReleaseYear };
+
+const checkDate = (varName, varVal) => {
+  /**
+   * Function to check if Input varVal is of type mm/dd/yyyy"
+   * Input Variable Name, Variable Value in String
+   * Return type: Trimed Input date in String
+   */
+  let regexDate = /^([0][1-9]|[1][0-2])\/([0-2][1-9]|[3][0-1])\/(\d{4})/;
+
+  if (typeof varName !== "string" || varName.trim().length < 1)
+    throw new Error(`Expected VarName to be non-empty String`);
+
+  if (typeof varVal !== "string" || varVal.trim().length < 1)
+    throw new Error(`Expected ${varName} to be non-empty String`);
+  varVal = varVal.trim();
+  if (!regexDate.test(varVal))
+    throw new Error(`Expected ${varName} to be of format 'MM/DD/YYYY'`);
+  let dateSplit = varVal.match(regexDate);
+  let year = dateSplit[3];
+  try {
+    checkReleaseYear(Number(year));
+  } catch (error) {
+    throw new Error(`Invalid year in ${varName} `);
+  }
+
+  try {
+  } catch (e) {
+    throw new Error(`Invalid Date format for ${varName}`);
+  }
+  return varVal;
+};
+export {
+  isID,
+  isString,
+  isURL,
+  checkNonEmptyStrArr,
+  checkReleaseYear,
+  checkDate,
+};
