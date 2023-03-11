@@ -16,7 +16,7 @@ router
       });
       res.json(finalRes);
     } catch (error) {
-      res.sendStatus(500).json({ error });
+      return res.status(500).json({ error: e.message });
     }
   })
   .post(async (req, res) => {
@@ -127,7 +127,7 @@ router
     let deletedBand;
     try {
       deletedBand = await bandData.remove(req.params.id);
-      res.json(deletedBand);
+      if (deletedBand) res.json({ bandid: req.params.id, deleted: true });
     } catch (e) {
       return res.status(404).json({ error: e.message });
     }
