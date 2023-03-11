@@ -2,9 +2,12 @@
 
 import { ObjectId } from "mongodb";
 import { bands } from "../config/mongoCollections.js";
-import { checkNonEmptyStrArr, isID, isString } from "../helpers.js";
-import * as band from "./bands.js";
-
+import { checkNonEmptyStrArr, isID, isString, checkDate } from "../helpers.js";
+import { bandData } from "./index.js";
+/**
+ * !todo: checkrelease data format2
+ *
+ */
 const create = async (bandId, title, releaseDate, tracks, rating) => {
   try {
     bandId = isID(bandId);
@@ -18,11 +21,11 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
     throw e;
   }
 
-  if (typeof releaseDate !== "number" || isNaN(releaseDate))
-    throw new Error("Expected Album Release Date to be Number");
-
-  if (releaseDate < 1900 || releaseDate > new Date().getFullYear() + 1)
-    throw new Error("Improper Album release Date");
+  try {
+    releaseDate = checkDate("releaseDate", releaseDate);
+  } catch (error) {
+    throw error;
+  }
 
   try {
     tracks = checkNonEmptyStrArr("tracks", tracks);
@@ -38,7 +41,7 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
   const bandsCol = await bands();
   let bandObj;
   try {
-    bandObj = await band.get(bandId);
+    bandObj = await bandData.get(bandId);
   } catch (error) {
     throw error;
   }
@@ -85,14 +88,15 @@ const getAll = async (bandId) => {
   } catch (e) {
     throw e;
   }
-
+  let bandDetails;
   try {
-    const bandDetails = await band.get(bandId);
+    bandDetails = await bandData.get(bandId);
+    bandDetails = bandDetails["albums"];
   } catch (error) {
     throw error;
   }
 
-  return bandDetails["album"].toArray();
+  return bandDetails;
 };
 
 const get = async (albumId) => {
@@ -104,7 +108,7 @@ const get = async (albumId) => {
   } catch (error) {
     throw error;
   }
-  let allBands = await band.getAll();
+  let allBands = await bandData.getAll();
   let albumObj;
   for (let bandElm of allBands) {
     for (let albumBand of bandElm["albums"])
@@ -128,30 +132,30 @@ const remove = async (albumId) => {
   }
 
   let bandCol = await bands();
-  let allBands = await band.getAll();
-  let albumID;
-  let bandID;
+  let allBands = await bandData.getAll();
+  let albumIDObj;
+  let bandIDObj;
   for (let bandElm of allBands) {
     for (let albumBand of bandElm["albums"])
       if (albumBand._id.toString() === albumId) {
-        albumID = albumBand._id.toString();
-        bandID = bandElm._id;
+        albumIDObj = albumBand._id.toString();
+        bandIDObj = bandElm._id;
         break;
       }
-    if (albumID) break;
+    if (albumIDObj) break;
   }
 
-  if (!albumID || !bandID) throw new Error(`Unable to find Band`);
+  if (!albumIDObj || !bandIDObj)
+    throw new Error(`No Album for ID: '${albumId}'`);
 
-  console.log(albumID, bandID);
   const updatedBand = await bandCol.findOneAndUpdate(
-    { _id: new ObjectId(bandID) },
+    { _id: new ObjectId(bandIDObj) },
     {
       $set: {
         overallRating: 1,
       },
       $pull: {
-        albums: { _id: new ObjectId(albumID) },
+        albums: { _id: new ObjectId(albumIDObj) },
       },
     },
     { returnDocument: "after" }
@@ -164,4 +168,4 @@ const remove = async (albumId) => {
   return updatedBand["value"];
 };
 
-export { create, get, getAll, remove };
+export default { create, get, getAll, remove };
