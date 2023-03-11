@@ -102,7 +102,7 @@ const get = async (id) => {
     _id: new ObjectId(id),
   });
 
-  if (!bandDetail) throw new Error("Band not found");
+  if (!bandDetail) throw new Error(`Band not found for id:'${id}'`);
 
   bandDetail["_id"] = bandDetail["_id"].toString();
   bandsCol.close;
@@ -130,10 +130,10 @@ const remove = async (id) => {
   });
 
   if (bandDelete["lastErrorObject"]["n"] === 0)
-    throw new Error(`Unable to delete Record for ID: ${id}`);
+    throw new Error(`No Band for ID: '${id}'`);
 
   if (bandDelete.hasOwnProperty("value")) return bandDelete["value"];
-  else return {};
+  else throw new Error("No Object Returned from DB");
 };
 
 const update = async (
@@ -178,10 +178,11 @@ const update = async (
   try {
     groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
   } catch (err) {
-    throw error;
+    throw err;
   }
 
-  const currentBand = await get(id);
+  // const currentBand = await get(id);
+  const bandCol = await bands();
 
   const updatedBand = await bandCol.findOneAndUpdate(
     { _id: new ObjectId(id) },
@@ -204,4 +205,4 @@ const update = async (
   return updatedBand["value"];
 };
 
-export { create, get, getAll, remove, update };
+export default { create, get, getAll, remove, update };
