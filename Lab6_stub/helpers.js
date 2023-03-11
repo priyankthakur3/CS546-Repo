@@ -12,7 +12,7 @@ const isID = (id) => {
 
   id = id.trim();
 
-  if (!ObjectId.isValid(id)) throw new Error(`Invalid Object ID: ${id}`);
+  if (!ObjectId.isValid(id)) throw new Error(`Invalid Object ID: '${id}'`);
 
   return id;
 };
@@ -70,4 +70,13 @@ const checkNonEmptyStrArr = (arrName, arrVal) => {
   return arrVal;
 };
 
-export { isID, isString, isURL, checkNonEmptyStrArr };
+const checkReleaseYear = (yearVal) => {
+  if (typeof yearVal !== "number")
+    throw new Error("Error Expected Year to number");
+  if (yearVal < 1900 || yearVal > new Date().getFullYear() + 1)
+    throw new Error(
+      `Error expected year between 1900 and ${new Date().getFullYear() + 1}`
+    );
+  return yearVal;
+};
+export { isID, isString, isURL, checkNonEmptyStrArr, checkReleaseYear };
