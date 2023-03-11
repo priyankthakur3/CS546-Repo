@@ -102,7 +102,7 @@ const get = async (id) => {
     _id: new ObjectId(id),
   });
 
-  if (!bandDetail) throw new Error(`Band not found for id:'${id}'`);
+  if (!bandDetail) throw new Error(`No Band for id:'${id}'`);
 
   bandDetail["_id"] = bandDetail["_id"].toString();
   bandsCol.close;
