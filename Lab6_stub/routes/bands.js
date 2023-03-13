@@ -15,7 +15,7 @@ router
         finalRes.push({ _id: element._id, name: element.name });
       });
       res.json(finalRes);
-    } catch (error) {
+    } catch (e) {
       return res.status(500).json({ error: e.message });
     }
   })
