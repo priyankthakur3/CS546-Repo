@@ -5,7 +5,7 @@ import { bands } from "../config/mongoCollections.js";
 import { checkNonEmptyStrArr, isID, isString, checkDate } from "../helpers.js";
 import { bandData } from "./index.js";
 /**
- * !todo: checkrelease data format2
+ * todo: Check rating logic from slack
  *
  */
 const create = async (bandId, title, releaseDate, tracks, rating) => {
@@ -82,6 +82,29 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
   return newAlbumObj;
 };
 
+const getAllAlbums = async () => {
+  let finalAlbumsList = [];
+  let allBands = await bandData.getAll();
+
+  if (allBands.length === 0) return finalAlbumsList;
+
+  for (let band of allBands) {
+    if (band.albums.length < 1) continue;
+    band["albums"].forEach((element) => {
+      element["bandid"] = band._id;
+    });
+    finalAlbumsList.push(...band.albums);
+  }
+
+  finalAlbumsList = finalAlbumsList.sort((a, b) => {
+    if (a._id > b._id) return 1;
+    else if (a._id < b._id) return -1;
+    else 0;
+  });
+
+  return finalAlbumsList;
+};
+
 const getAll = async (bandId) => {
   try {
     bandId = isID(bandId);
@@ -100,27 +123,24 @@ const getAll = async (bandId) => {
 };
 
 const get = async (albumId) => {
-  /**
-   * !todo: Convert to nlogn complexity
-   */
   try {
     albumId = isID(albumId);
   } catch (error) {
     throw error;
   }
-  let allBands = await bandData.getAll();
-  let albumObj;
-  for (let bandElm of allBands) {
-    for (let albumBand of bandElm["albums"])
-      if (albumBand._id.toString() === albumId) {
-        albumObj = albumBand;
-        break;
-      }
-    if (albumObj) break;
-  }
+
+  let albumsAll = await getAllAlbums();
+
+  if (albumsAll.length === 0) throw new Error("Album not Found");
+
+  let albumObj = albumsAll.find(({ _id }) => {
+    return _id === albumId;
+  });
+
   if (!albumObj) throw new Error("Album Not Found");
 
-  albumObj._id = albumObj._id.toString();
+  delete albumObj.bandid;
+
   return albumObj;
 };
 
@@ -132,30 +152,22 @@ const remove = async (albumId) => {
   }
 
   let bandCol = await bands();
-  let allBands = await bandData.getAll();
-  let albumIDObj;
-  let bandIDObj;
-  for (let bandElm of allBands) {
-    for (let albumBand of bandElm["albums"])
-      if (albumBand._id.toString() === albumId) {
-        albumIDObj = albumBand._id.toString();
-        bandIDObj = bandElm._id;
-        break;
-      }
-    if (albumIDObj) break;
-  }
+  let albumsAll = await getAllAlbums();
 
-  if (!albumIDObj || !bandIDObj)
-    throw new Error(`No Album for ID: '${albumId}'`);
+  let albumObj = albumsAll.find(({ _id }) => {
+    return _id === albumId;
+  });
+
+  if (!albumObj) throw new Error("Album Not Found");
 
   const updatedBand = await bandCol.findOneAndUpdate(
-    { _id: new ObjectId(bandIDObj) },
+    { _id: new ObjectId(albumObj.bandid) },
     {
       $set: {
         overallRating: 1,
       },
       $pull: {
-        albums: { _id: new ObjectId(albumIDObj) },
+        albums: { _id: new ObjectId(albumObj._id) },
       },
     },
     { returnDocument: "after" }
@@ -168,4 +180,4 @@ const remove = async (albumId) => {
   return updatedBand["value"];
 };
 
-export default { create, get, getAll, remove };
+export default { create, get, getAll, remove, getAllAlbums };
