@@ -143,7 +143,7 @@ const getDecimalPlaces = (varName, varVal) => {
     throw new Error(`Expected ${varName} to be Number`);
 
   if (Number.isInteger(varVal)) return 0;
-  else return varVal.toString.split(".")[1].length;
+  else return varVal.toString().split(".")[1].length;
 };
 export {
   isID,
