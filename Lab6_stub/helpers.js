@@ -107,17 +107,25 @@ const checkDate = (varName, varVal) => {
   if (!regexDate.test(varVal))
     throw new Error(`Expected ${varName} to be of format 'MM/DD/YYYY'`);
   let dateSplit = varVal.match(regexDate);
-  let year = dateSplit[3];
+  let month = parseInt(dateSplit[1] - 1);
+  let day = parseInt(dateSplit[2]);
+  let year = parseInt(dateSplit[3]);
+  let dateObj = new Date(year, month, day);
+  // console.log(year, month, day);
+
+  // console.log(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+  if (
+    dateObj.getFullYear() !== year ||
+    (dateObj.getMonth() !== month && dateObj.getDate() !== day)
+  )
+    throw new Error(`Invalid date in ${varName}`);
+
   try {
     checkReleaseYear(Number(year));
   } catch (error) {
     throw new Error(`Invalid year in ${varName} `);
   }
 
-  try {
-  } catch (e) {
-    throw new Error(`Invalid Date format for ${varName}`);
-  }
   return varVal;
 };
 
