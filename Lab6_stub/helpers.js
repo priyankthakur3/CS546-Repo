@@ -120,6 +120,23 @@ const checkDate = (varName, varVal) => {
   }
   return varVal;
 };
+
+const getDecimalPlaces = (varName, varVal) => {
+  /**
+   * Function to check if Input varVal is of type mm/dd/yyyy"
+   * Input Variable Name, Variable Value in String
+   * Return type: Trimed Input date in String
+   */
+
+  if (typeof varName !== "string" || varName.trim().length < 1)
+    throw new Error(`Expected VarName to be non-empty String`);
+
+  if (typeof varVal !== "number" || isNaN(varVal))
+    throw new Error(`Expected ${varName} to be Number`);
+
+  if (Number.isInteger(varVal)) return 0;
+  else return varVal.toString.split(".")[1].length;
+};
 export {
   isID,
   isString,
@@ -127,4 +144,5 @@ export {
   checkNonEmptyStrArr,
   checkReleaseYear,
   checkDate,
+  getDecimalPlaces,
 };
