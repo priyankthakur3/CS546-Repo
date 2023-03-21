@@ -11,41 +11,17 @@ const create = async (
   groupMembers,
   yearBandWasFormed
 ) => {
-  try {
-    name = isString("name", name);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    genre = checkNonEmptyStrArr("Genre", genre);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    website = isURL("website", website);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    recordCompany = isString("recordCompany", recordCompany);
-  } catch (error) {
-    throw error;
-  }
+  name = isString("name", name);
+  genre = checkNonEmptyStrArr("Genre", genre);
+  website = isURL("website", website);
+  recordCompany = isString("recordCompany", recordCompany);
+  groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
 
   if (typeof yearBandWasFormed !== "number" || isNaN(yearBandWasFormed))
     throw new Error("Expected yearBandWasFormed to be Number");
 
   if (yearBandWasFormed < 1900 || yearBandWasFormed > new Date().getFullYear())
     throw new Error("Please insert proper year for yearBandWasFormed");
-
-  try {
-    groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
-  } catch (error) {
-    throw error;
-  }
 
   let newBand = {
     name: name,
@@ -90,11 +66,7 @@ const getAll = async () => {
 };
 
 const get = async (id) => {
-  try {
-    id = isID(id);
-  } catch (e) {
-    throw e;
-  }
+  id = isID(id);
 
   const bandsCol = await bands();
 
@@ -117,11 +89,7 @@ const get = async (id) => {
 };
 
 const remove = async (id) => {
-  try {
-    id = isID(id);
-  } catch (e) {
-    throw e;
-  }
+  id = isID(id);
 
   const bandsCol = await bands();
 
@@ -145,41 +113,18 @@ const update = async (
   groupMembers,
   yearBandWasFormed
 ) => {
-  try {
-    name = isString("name", name);
-  } catch (error) {
-    throw error;
-  }
+  name = isString("name", name);
+  genre = checkNonEmptyStrArr("Genre", genre);
+  website = isURL("website", website);
+  groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
 
-  try {
-    genre = checkNonEmptyStrArr("Genre", genre);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    website = isURL("website", website);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    recordCompany = isString("recordCompany", recordCompany);
-  } catch (error) {
-    throw error;
-  }
+  recordCompany = isString("recordCompany", recordCompany);
 
   if (typeof yearBandWasFormed !== "number" || isNaN(yearBandWasFormed))
     throw new Error("Expected yearBandWasFormed to be Number");
 
   if (yearBandWasFormed < 1900 || yearBandWasFormed > new Date().getFullYear())
     throw new Error("Please insert proper year for yearBandWasFormed");
-
-  try {
-    groupMembers = checkNonEmptyStrArr("groupMembers", groupMembers);
-  } catch (err) {
-    throw err;
-  }
 
   // const currentBand = await get(id);
   const bandCol = await bands();
