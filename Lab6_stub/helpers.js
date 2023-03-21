@@ -111,9 +111,7 @@ const checkDate = (varName, varVal) => {
   let day = parseInt(dateSplit[2]);
   let year = parseInt(dateSplit[3]);
   let dateObj = new Date(year, month, day);
-  // console.log(year, month, day);
 
-  // console.log(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
   if (
     dateObj.getFullYear() !== year ||
     (dateObj.getMonth() !== month && dateObj.getDate() !== day)
