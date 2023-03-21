@@ -2,70 +2,92 @@
 
 import { ObjectId } from "mongodb";
 import { bands } from "../config/mongoCollections.js";
-import { checkNonEmptyStrArr, isID, isString, checkDate } from "../helpers.js";
-import { bandData } from "./index.js";
+import {
+  checkNonEmptyStrArr,
+  isID,
+  isString,
+  checkDate,
+  getDecimalPlaces,
+} from "../helpers.js";
 /**
- * todo: Check rating logic from slack
+ *
  *
  */
+
+const getBand = async (id) => {
+  id = isID(id);
+
+  const bandsCol = await bands();
+
+  let bandDetail = await bandsCol.findOne({
+    _id: new ObjectId(id),
+  });
+
+  if (!bandDetail) throw new Error(`No Band for id:'${id}'`);
+
+  bandDetail["_id"] = bandDetail["_id"].toString();
+  bandsCol.close;
+
+  if (bandDetail.albums.length > 0) {
+    for (let i = 0; i < bandDetail.albums.length; i++) {
+      bandDetail.albums[i]._id = bandDetail.albums[i]._id.toString();
+    }
+  }
+
+  return bandDetail;
+};
+
 const create = async (bandId, title, releaseDate, tracks, rating) => {
-  try {
-    bandId = isID(bandId);
-  } catch (e) {
-    throw e;
-  }
-
-  try {
-    title = isString("Album title", title);
-  } catch (error) {
-    throw e;
-  }
-
-  try {
-    releaseDate = checkDate("releaseDate", releaseDate);
-  } catch (error) {
-    throw error;
-  }
-
-  try {
-    tracks = checkNonEmptyStrArr("tracks", tracks);
-  } catch (error) {
-    throw error;
-  }
+  bandId = isID(bandId);
+  title = isString("Album title", title);
+  releaseDate = checkDate("releaseDate", releaseDate);
+  tracks = checkNonEmptyStrArr("tracks", tracks);
 
   if (typeof rating !== "number" || isNaN(rating))
     throw new Error("Improper Album Rating");
 
-  if (rating < 1 || rating > 5) throw new Error("Improper Album Rating");
+  if (rating < 1 || rating > 5 || getDecimalPlaces("Album Rating", rating) > 1)
+    throw new Error("Improper Album Rating");
 
   const bandsCol = await bands();
   let bandObj;
   try {
-    bandObj = await bandData.get(bandId);
+    bandObj = await getBand(bandId);
   } catch (error) {
     throw error;
   }
   let overallRating = rating;
   if (bandObj["albums"].length > 0) {
     for (let album of bandObj["albums"]) {
-      //console.log(overallRating);
       overallRating = overallRating + album["rating"];
     }
-    // console.log(overallRating);
     overallRating = overallRating / (bandObj["albums"].length + 1);
   }
 
-  overallRating =
-    Math.trunc(overallRating) + Math.floor((overallRating % 1) * 10) / 10;
+  overallRating = Number(overallRating.toFixed(2));
 
   let newAlbumId = new ObjectId();
+
   let updatedBand = await bandsCol.findOneAndUpdate(
-    { _id: new ObjectId(bandId) },
     {
-      $set: { overallRating },
-      $push: {
+      _id: new ObjectId(bandId),
+      albums: {
+        //check if object already exists in database, if it does don't update it
+        $not: {
+          $elemMatch: {
+            title,
+            releaseDate,
+            tracks,
+            rating,
+          },
+        },
+      },
+    },
+    {
+      $addToSet: {
         albums: { _id: newAlbumId, title, releaseDate, tracks, rating },
       },
+      $set: { overallRating },
     },
     { returnDocument: "after" }
   );
@@ -82,38 +104,12 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
   return newAlbumObj;
 };
 
-const getAllAlbums = async () => {
-  let finalAlbumsList = [];
-  let allBands = await bandData.getAll();
-
-  if (allBands.length === 0) return finalAlbumsList;
-
-  for (let band of allBands) {
-    if (band.albums.length < 1) continue;
-    band["albums"].forEach((element) => {
-      element["bandid"] = band._id;
-    });
-    finalAlbumsList.push(...band.albums);
-  }
-
-  finalAlbumsList = finalAlbumsList.sort((a, b) => {
-    if (a._id > b._id) return 1;
-    else if (a._id < b._id) return -1;
-    else 0;
-  });
-
-  return finalAlbumsList;
-};
-
 const getAll = async (bandId) => {
-  try {
-    bandId = isID(bandId);
-  } catch (e) {
-    throw e;
-  }
+  bandId = isID(bandId);
+
   let bandDetails;
   try {
-    bandDetails = await bandData.get(bandId);
+    bandDetails = await getBand(bandId);
     bandDetails = bandDetails["albums"];
   } catch (error) {
     throw error;
@@ -123,61 +119,75 @@ const getAll = async (bandId) => {
 };
 
 const get = async (albumId) => {
-  try {
-    albumId = isID(albumId);
-  } catch (error) {
-    throw error;
-  }
+  albumId = isID(albumId);
 
-  let albumsAll = await getAllAlbums();
+  let bandsCol = await bands();
 
-  if (albumsAll.length === 0) throw new Error("Album not Found");
-
-  let albumObj = albumsAll.find(({ _id }) => {
-    return _id === albumId;
-  });
+  let albumObj = await bandsCol.findOne(
+    {
+      "albums._id": new ObjectId(albumId),
+    },
+    {
+      projection: {
+        _id: 0,
+        albums: { $elemMatch: { _id: new ObjectId(albumId) } },
+      },
+    }
+  );
 
   if (!albumObj) throw new Error("Album Not Found");
+  albumObj = albumObj.albums[0];
 
-  delete albumObj.bandid;
+  albumObj._id = albumObj._id.toString();
 
   return albumObj;
 };
 
 const remove = async (albumId) => {
-  try {
-    albumId = isID(albumId);
-  } catch (error) {
-    throw Error;
-  }
+  albumId = isID(albumId);
 
-  let bandCol = await bands();
-  let albumsAll = await getAllAlbums();
+  let bandsCol = await bands();
 
-  let albumObj = albumsAll.find(({ _id }) => {
-    return _id === albumId;
-  });
+  let albumObj = await bandsCol.findOne(
+    {
+      "albums._id": new ObjectId(albumId),
+    },
+    { projection: { _id: 1 } }
+  );
 
   if (!albumObj) throw new Error("Album Not Found");
 
-  const updatedBand = await bandCol.findOneAndUpdate(
-    { _id: new ObjectId(albumObj.bandid) },
+  const updatedBandInfo = await bandsCol.updateOne(
+    { _id: albumObj._id },
     {
-      $set: {
-        overallRating: 1,
-      },
-      $pull: {
-        albums: { _id: new ObjectId(albumObj._id) },
-      },
-    },
-    { returnDocument: "after" }
+      $pull: { albums: { _id: new ObjectId(albumId) } },
+    }
   );
 
-  if (updatedBand.lastErrorObject.n === 0) throw new Error("Failed to Update");
+  if (!updatedBandInfo.acknowledged || updatedBandInfo.modifiedCount !== 1)
+    throw new Error("Failed to Pull Band");
 
-  updatedBand["value"]["_id"] = updatedBand["value"]["_id"].toString();
+  let updateBandRatingInfo = await bandsCol.updateOne(
+    { _id: albumObj._id },
 
-  return updatedBand["value"];
+    [
+      {
+        $set: {
+          overallRating: {
+            $round: [{ $ifNull: [{ $avg: "$albums.rating" }, 0] }, 1],
+          },
+        },
+      },
+    ]
+  );
+
+  if (
+    !updateBandRatingInfo.acknowledged ||
+    updateBandRatingInfo.modifiedCount === 0
+  )
+    throw new Error("Failed to Update Rating");
+
+  return { albumId, deleted: true };
 };
 
-export default { create, get, getAll, remove, getAllAlbums };
+export default { create, get, getAll, remove };
