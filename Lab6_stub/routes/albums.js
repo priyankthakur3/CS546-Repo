@@ -121,15 +121,10 @@ router
       return res.status(400).json({ error: e.message });
     }
 
-    let removedObj;
+    let removedObjMsg;
     try {
-      removedObj = await albumData.remove(req.params.albumId);
-      let tempObj = removedObj["albums"].find((album) => {
-        album._id === req.params.albumId;
-      });
-      if (typeof tempObj === "undefined")
-        return res.json({ bandId: req.params.albumId, deleted: true });
-      else return res.status(500).json({ error: "Failed to Update" });
+      removedObjMsg = await albumData.remove(req.params.albumId);
+      if (removedObjMsg) return res.json(removedObjMsg);
     } catch (e) {
       if (e.message === "Failed to Update")
         return res.status(500).json({ error: e.message });
