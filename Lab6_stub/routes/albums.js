@@ -61,9 +61,14 @@ router
       return res.status(400).json({ error: e.message });
     }
 
-    if (albumInfo.rating < 1 || albumInfo.rating > 5)
+    if (
+      albumInfo.rating < 1 ||
+      albumInfo.rating > 5 ||
+      helpers.getDecimalPlaces("Album Rating", albumInfo.rating) > 1
+    )
       return res.status(400).json({
-        error: "Improper Album Rating Expecteed Rating between 1 to 5",
+        error:
+          "Improper Album Rating Expected Rating between 1 to 5 upto Single Decimal place",
       });
 
     //check if bandID exists in Database or not
