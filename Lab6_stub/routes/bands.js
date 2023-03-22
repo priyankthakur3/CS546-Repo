@@ -31,7 +31,6 @@ router
     try {
       bandInfo.name = helpers.isString("Band Name", bandInfo.name);
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -41,7 +40,6 @@ router
         bandInfo.recordCompany
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -51,7 +49,6 @@ router
         bandInfo.genre
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -61,14 +58,12 @@ router
         bandInfo.groupMembers
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
     try {
       bandInfo.website = helpers.isURL("Band Website", bandInfo.website);
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -77,7 +72,6 @@ router
         bandInfo.yearBandWasFormed
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -92,11 +86,8 @@ router
       );
       res.json(newBand);
     } catch (e) {
-      //console.log(`Error: ${e}`);
-      return res.status(400).json({ error: e.message });
+      return res.status(500).json({ error: e.message });
     }
-
-    // return res.json(newBand);
   });
 
 router
@@ -152,7 +143,6 @@ router
     try {
       bandInfo.name = helpers.isString("Band Name", bandInfo.name);
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -162,7 +152,6 @@ router
         bandInfo.recordCompany
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -172,7 +161,6 @@ router
         bandInfo.genre
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -182,14 +170,12 @@ router
         bandInfo.groupMembers
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
     try {
       bandInfo.website = helpers.isURL("Band Website", bandInfo.website);
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
@@ -198,7 +184,6 @@ router
         bandInfo.yearBandWasFormed
       );
     } catch (e) {
-      //console.log(`Error: ${e}`);
       return res.status(400).json({ error: e.message });
     }
 
