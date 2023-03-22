@@ -57,7 +57,7 @@ const isURL = (varName, varVal) => {
   return varVal;
 };
 
-const checkNonEmptyStrArr = (arrName, arrVal) => {
+const checkNonEmptyStrArr = (arrName, arrVal, numElements = 1) => {
   /**
    * Function to check if Input Array Contains
    * Input Variable Name, Variable Value in String
@@ -66,9 +66,13 @@ const checkNonEmptyStrArr = (arrName, arrVal) => {
   if (typeof arrName !== "string" || arrName.trim().length < 1)
     throw new Error(`Expected arrName to be non-empty String`);
 
-  if (!Array.isArray(arrVal) || arrVal.length < 1)
+  if (!Array.isArray(arrVal))
     throw new Error(`Expected ${arrName} to be non-empty Array`);
 
+  if (arrVal.length < numElements)
+    throw new Error(
+      `Expected ${arrName} to contain atleast ${numElements} Elements`
+    );
   for (let i = 0; i < arrVal.length; i++) {
     arrVal[i] = isString(arrName, arrVal[i]);
   }
@@ -140,6 +144,7 @@ const getDecimalPlaces = (varName, varVal) => {
   if (typeof varVal !== "number" || isNaN(varVal))
     throw new Error(`Expected ${varName} to be Number`);
 
+  // Idea from website https://www.tutorialspoint.com/decimal-count-of-a-number-in-javascript
   if (Number.isInteger(varVal)) return 0;
   else return varVal.toString().split(".")[1].length;
 };
