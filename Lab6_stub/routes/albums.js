@@ -54,8 +54,9 @@ router
     }
     try {
       albumInfo.tracks = helpers.checkNonEmptyStrArr(
-        "Album Track",
-        albumInfo.tracks
+        "Album Tracks",
+        albumInfo.tracks,
+        3
       );
     } catch (e) {
       return res.status(400).json({ error: e.message });

@@ -41,7 +41,7 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
   bandId = isID(bandId);
   title = isString("Album title", title);
   releaseDate = checkDate("releaseDate", releaseDate);
-  tracks = checkNonEmptyStrArr("tracks", tracks);
+  tracks = checkNonEmptyStrArr("tracks", tracks, 3);
 
   if (typeof rating !== "number" || isNaN(rating))
     throw new Error("Improper Album Rating");
