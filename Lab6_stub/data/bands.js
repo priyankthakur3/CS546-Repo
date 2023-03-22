@@ -37,6 +37,7 @@ const create = async (
   const bandsCol = await bands();
   const bandInfo = await bandsCol.insertOne(newBand);
 
+  // console.log(bandInfo);
   if (!bandInfo.acknowledged || !bandInfo.insertedId)
     throw "Could not add Band";
 
