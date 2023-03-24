@@ -104,12 +104,12 @@ router
       let band = await bandData.get(req.params.id);
       res.json(band);
     } catch (e) {
-      res.status(404).json({ error: e.message });
+      if (e.message === "No Band Found")
+        return res.status(404).json({ error: e.message });
+      else return res.status(500).json({ error: e.message });
     }
   })
   .delete(async (req, res) => {
-    //code here for DELETE
-
     try {
       req.params.id = helpers.isID(req.params.id);
     } catch (e) {
@@ -120,12 +120,12 @@ router
       deletedBand = await bandData.remove(req.params.id);
       if (deletedBand) res.json({ bandid: req.params.id, deleted: true });
     } catch (e) {
-      return res.status(404).json({ error: e.message });
+      if (e.message === "No Band Found")
+        return res.status(404).json({ error: e.message });
+      else return res.status(500).json({ error: e.message });
     }
   })
   .put(async (req, res) => {
-    //code here for PUT
-
     let bandInfo = req.body;
     let newBand;
 
@@ -199,7 +199,9 @@ router
       );
       res.json(newBand);
     } catch (e) {
-      return res.status(404).json({ error: e.message });
+      if (e.message === "Band Not Found")
+        return res.status(404).json({ error: e.message });
+      return res.status(500).json({ error: e.message });
     }
   });
 export default router;
