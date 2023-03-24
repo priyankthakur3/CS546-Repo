@@ -5,6 +5,7 @@
   "main": "test.js",
   "type": "module",
   "scripts": {
+    "seed": "node ./tasks/seed.js",
     "start": "node app.js",
     "test": "node test.js",
     "dev": "nodemon app.js"
