@@ -9,10 +9,6 @@ import {
   checkDate,
   getDecimalPlaces,
 } from "../helpers.js";
-/**
- *
- *
- */
 
 const getBand = async (id) => {
   id = isID(id);
@@ -64,7 +60,7 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
     overallRating = overallRating / (bandObj["albums"].length + 1);
   }
 
-  overallRating = Number(overallRating.toFixed(2));
+  overallRating = Number(overallRating.toFixed(1));
 
   let newAlbumId = new ObjectId();
 
@@ -167,9 +163,8 @@ const remove = async (albumId) => {
   if (!updatedBandInfo.acknowledged || updatedBandInfo.modifiedCount !== 1)
     throw new Error("Failed to Pull Band");
 
-  let updateBandRatingInfo = await bandsCol.updateOne(
+  let updateBandRating = await bandsCol.findOneAndUpdate(
     { _id: albumObj._id },
-
     [
       {
         $set: {
@@ -178,16 +173,24 @@ const remove = async (albumId) => {
           },
         },
       },
-    ]
+    ],
+    {
+      returnDocument: "after",
+    }
   );
 
-  if (
-    !updateBandRatingInfo.acknowledged ||
-    updateBandRatingInfo.modifiedCount === 0
-  )
+  if (updateBandRating.lastErrorObject.n !== 1)
     throw new Error("Failed to Update Rating");
 
-  return { albumId, deleted: true };
+  updateBandRating = updateBandRating.value;
+  updateBandRating._id = updateBandRating._id.toString();
+  if (updateBandRating.albums.length > 0) {
+    for (let i = 0; i < updateBandRating.albums.length; i++) {
+      updateBandRating.albums[i]._id =
+        updateBandRating.albums[i]._id.toString();
+    }
+  }
+  return updateBandRating;
 };
 
 export default { create, get, getAll, remove };
