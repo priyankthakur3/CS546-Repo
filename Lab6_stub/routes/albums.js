@@ -122,14 +122,18 @@ router
       return res.status(400).json({ error: e.message });
     }
 
-    let removedObjMsg;
     try {
-      removedObjMsg = await albumData.remove(req.params.albumId);
-      if (removedObjMsg) return res.json(removedObjMsg);
+      let updatedBand = await albumData.remove(req.params.albumId);
+      let albumExists = updatedBand["albums"].find((album) => {
+        album._id === req.params.albumId;
+      });
+      if (!albumExists)
+        return res.json({ albumId: req.params.albumId, deleted: true });
+      else return res.status(500).json({ error: "Failed to Update" });
     } catch (e) {
-      if (e.message === "Failed to Update")
-        return res.status(500).json({ error: e.message });
-      return res.status(404).json({ error: e.message });
+      if (e.message === "Album Not Found")
+        return res.status(404).json({ error: e.message });
+      else return res.status(500).json({ error: e.message });
     }
   });
 
