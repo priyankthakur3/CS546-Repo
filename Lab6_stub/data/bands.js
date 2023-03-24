@@ -37,13 +37,10 @@ const create = async (
   const bandsCol = await bands();
   const bandInfo = await bandsCol.insertOne(newBand);
 
-  // console.log(bandInfo);
   if (!bandInfo.acknowledged || !bandInfo.insertedId)
-    throw "Could not add Band";
+    throw new Error("Could not add Band");
 
   const bandID = bandInfo.insertedId.toString();
-
-  //fetch new inserted record from database for display
   const band = await get(bandID);
   return band;
 };
@@ -75,11 +72,9 @@ const get = async (id) => {
     _id: new ObjectId(id),
   });
 
-  if (!bandDetail) throw new Error(`No Band for id:'${id}'`);
+  if (!bandDetail) throw new Error(`No Band Found`);
 
   bandDetail["_id"] = bandDetail["_id"].toString();
-  bandsCol.close;
-
   if (bandDetail.albums.length > 0) {
     for (let i = 0; i < bandDetail.albums.length; i++) {
       bandDetail.albums[i]._id = bandDetail.albums[i]._id.toString();
@@ -94,15 +89,20 @@ const remove = async (id) => {
 
   const bandsCol = await bands();
 
+  const bandObj = await bandsCol.findOne(
+    { _id: new ObjectId(id) },
+    { projection: { _id: 1 } }
+  );
+
+  if (!bandObj) throw new Error("No Band Found");
+
   const bandDelete = await bandsCol.findOneAndDelete({
     _id: new ObjectId(id),
   });
 
-  if (bandDelete["lastErrorObject"]["n"] === 0)
-    throw new Error(`No Band for ID: '${id}'`);
-
-  if (bandDelete.hasOwnProperty("value")) return bandDelete["value"];
-  else throw new Error("No Object Returned from DB");
+  if (bandDelete.hasOwnProperty("value"))
+    return `${bandDelete["value"]["name"]} has been successfully deleted!`;
+  else throw new Error("Error from Driver");
 };
 
 const update = async (
@@ -114,6 +114,7 @@ const update = async (
   groupMembers,
   yearBandWasFormed
 ) => {
+  id = isID(id);
   name = isString("name", name);
   genre = checkNonEmptyStrArr("Genre", genre);
   website = isURL("website", website);
@@ -127,8 +128,16 @@ const update = async (
   if (yearBandWasFormed < 1900 || yearBandWasFormed > new Date().getFullYear())
     throw new Error("Please insert proper year for yearBandWasFormed");
 
-  // const currentBand = await get(id);
   const bandCol = await bands();
+
+  const existBandID = await bandCol.findOne(
+    { _id: new ObjectId(id) },
+    { projection: { _id: 1 } }
+  );
+
+  if (!existBandID) {
+    throw new Error(`Band Not Found`);
+  }
 
   const updatedBand = await bandCol.findOneAndUpdate(
     { _id: new ObjectId(id) },
