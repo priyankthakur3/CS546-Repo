@@ -73,8 +73,6 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
           $elemMatch: {
             title,
             releaseDate,
-            tracks,
-            rating,
           },
         },
       },
@@ -88,7 +86,7 @@ const create = async (bandId, title, releaseDate, tracks, rating) => {
     { returnDocument: "after" }
   );
 
-  if (updatedBand.lastErrorObject.n === 0) throw new Error("Failed to Update");
+  if (updatedBand.lastErrorObject.n === 0) throw new Error("Failed to Add");
 
   let newAlbumObj;
   for (let albumObj of updatedBand.value.albums)
