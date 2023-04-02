@@ -5,3 +5,4 @@ test.js
 test.mjs
 *.bak
 **/package-lock.json
+Lab8_Stub/config/settings.js
