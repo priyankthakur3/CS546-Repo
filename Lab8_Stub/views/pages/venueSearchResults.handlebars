@@ -44,3 +44,17 @@ the title set as the <title> element of the HTML document and as an h1 in your d
     </ol>
     You must also provide an a tag that links back to your / route with the text Make another search.
     }}
+
+<h2>{{searchVenueTerm}}</h2>
+<section>
+    {{#if venues}}
+    <ol id="venue-result">
+        {{#each venues}}        
+            <li><a href="/venuedetails/{{id}}">{{name}}</a></li>        
+        {{/each}}
+    </ol>
+    {{else}}
+    <p class="not-found">We're sorry, but no results were found for {{searchVenueTerm}}.</p>
+    {{/if}}
+    <a id="another-search" href="/">Make another search</a>
+</section>
