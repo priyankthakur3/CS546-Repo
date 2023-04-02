@@ -1,1 +1,33 @@
 /*This file should have CSS rulesets */
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    
+    background-color: lightgray;
+}
+
+
+article {
+    margin: auto;
+    width: 50%;
+}
+.heading-desc{
+    padding-top: 1px;
+}
+
+
+.error {
+    display: block;
+    background-color: crimson;
+    color: aliceblue;
+    padding: 5px;
+    font-weight: bold;
+}
+
+#venue-result li {
+    padding-top: 10px;
+}
