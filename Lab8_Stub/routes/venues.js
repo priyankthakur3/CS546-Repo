@@ -21,7 +21,7 @@ router.route("/searchvenues").post(async (req, res) => {
   } catch (error) {
     return res.status(400).render("pages/homepage", {
       title: "Venue Finder",
-      error: error.message,
+      error_msg: error.message,
     });
   }
   let data;
