@@ -21,16 +21,18 @@ the title set as the <title> element of the HTML document and as an h1 in your d
             Venue Finder!
         </h1>
         <p class="heading-desc">
-          You can use this page to search for venues
-        </p>
+          You can use this site to search for venues by using a Keyword.
+          This site will respond with first 10 venues matching the queried Venue Keyword.
+          To get further details regarding venue you may click on link to further details such as
+          Address, Contact Info</p>
         <form action="/searchvenues" method="POST">
             <label for="search-bar">
                 Search
             </label>
-            <input id="search-bar" type="search" name="venueSearchTerm" class="search" placeholder="Enter Venue Name">
+            <input id="search-bar" type="search" name="venueSearchTerm" placeholder="Enter Venue Name">
             <button class="submit-button" type="submit">Submit</button>
         </form>
-        {{#if error}}
-        <p class="error">{{error}}</p>
+        {{#if error_msg}}
+        {{> error}}
         {{/if}}
     </article>
