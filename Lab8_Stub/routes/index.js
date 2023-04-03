@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
   app.use("*", (req, res) => {
     res.status(404).render("pages/error", {
       title: "Error",
-      error_msg: "404: You Found a Page That Doesnot Exist!!!",
+      error_msg: "Error 404: You Found a Page That Donot Exist!!!",
     });
   });
 };
