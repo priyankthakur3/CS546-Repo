@@ -6,21 +6,16 @@
 body {
     margin: 0;
     padding: 20px;
-    background-color: lightgray;
+    background-color: #d8d9da;
 }
 
-
-article {
-    margin: auto;
-    width: 50%;
-}
 
 main div {
     padding:10px 0 10px 0;
 }
 
 main div>*+* {
-    padding: 2px 10px;
+    padding: 4px 10px;
 }
 
 section {
@@ -35,7 +30,7 @@ main div img {
 
 input[type=search] {
     box-sizing: border-box;
-    border: 2px solid #cccccc00;
+    border: 2px solid #15151568;
     outline: none;
     padding: 10px 15px;
     transition: 0.2s;
@@ -55,7 +50,7 @@ section ol li a {
 }
 
 .heading-desc{
-    padding-top: 2px;
+    padding-top: 5px;
 }
 
 
