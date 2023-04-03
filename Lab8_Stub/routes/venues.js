@@ -35,18 +35,13 @@ router.route("/searchvenues").post(async (req, res) => {
     });
   }
   try {
-    const firstTenVenues = await venueDataFunction.getVenuesTopN(
-      data._embedded.venues,
-      10
-    );
+    const firstTenVenues = data._embedded.venues.slice(0, 10);
 
     res.render("pages/venueSearchResults", {
       title: "Venues Found",
       searchVenueTerm,
       venues: firstTenVenues,
     });
-
-    searchVenueTerm;
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -64,6 +59,7 @@ router.route("/venuedetails/:id").get(async (req, res) => {
   }
   let venue_name,
     venue_link,
+    venue_link_text,
     venue_image_path,
     venue_address,
     venue_phoneNumberDetail;
@@ -78,8 +74,13 @@ router.route("/venuedetails/:id").get(async (req, res) => {
         venue_phoneNumberDetail = data.boxOfficeInfo.phoneNumberDetail;
     } else venue_phoneNumberDetail = "N/A";
 
-    if (data.url) venue_link = data.url;
-    else venue_link = "#";
+    if (data.url) {
+      venue_link = data.url;
+      venue_link_text = "Venue Information on Ticketmaster";
+    } else {
+      venue_link = "#";
+      venue_link_text = "N/A";
+    }
 
     if (
       data.address.line1 &&
@@ -107,6 +108,7 @@ router.route("/venuedetails/:id").get(async (req, res) => {
       venue_image_path,
       venue_address,
       venue_link,
+      venue_link_text,
       venue_address,
       venue_phoneNumberDetail,
     });
