@@ -18,20 +18,6 @@ const exportVenues = {
     );
     return data;
   },
-
-  async getVenuesTopN(data, elementsCount) {
-    if (!data) throw new Error(`No Venue data input provided`);
-    if (!elementsCount) throw new Error(`No Top N provided`);
-    return data.slice(0, elementsCount);
-  },
-
-  async checkIfExists(obj, key, returnValue) {
-    if (!obj || !key || !returnValue)
-      throw new Error(`Invalid Parameters Passed`);
-
-    if (obj.hasOwnProperty(key)) return obj.key;
-    else returnValue;
-  },
 };
 
 export default exportVenues;
