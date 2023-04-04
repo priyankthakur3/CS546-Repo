@@ -19,12 +19,14 @@ the title set as the <title> element of the HTML document and as an h1 in your d
     supplied one in the /public/images directory in the code stub)
     }}
 <div>
-    <h2>{{venue_name}}</h2>
+    <header><h2>{{venue_name}}</h2></header>
     <img alt="{{venue_name}}" src="{{venue_image_path}}">
     <br>
+    {{#if venue_link}}
     <a target="_blank" href="{{venue_link}}">{{venue_link_text}}</a>
+    {{else}}
+    <p>{{venue_link_text}}</p>
+    {{/if}}
     <address>Address: {{venue_address}}</address>
     <address>Phone: {{venue_phoneNumberDetail}}</address>
 </div>
-
-<a id="another-search" href="/">Make another search</a>
