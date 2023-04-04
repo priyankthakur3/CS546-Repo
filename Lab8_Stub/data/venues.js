@@ -13,9 +13,14 @@ const exportVenues = {
 
   async getVenueByID(id) {
     id = helpers.isString("ID", id);
-    const { data } = await axios.get(
-      `https://app.ticketmaster.com/discovery/v2/venues/${id}?&apikey=${apiKeys.key}&countryCode=US`
-    );
+    const { data } = await axios
+      .get(
+        `https://app.ticketmaster.com/discovery/v2/venues/${id}?&apikey=${apiKeys.key}&countryCode=US`
+      )
+      .catch((error) => {
+        if (error.response) throw error.response.data;
+        else throw error;
+      });
     return data;
   },
 };

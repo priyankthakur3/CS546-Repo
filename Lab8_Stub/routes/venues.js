@@ -55,7 +55,9 @@ router.route("/venuedetails/:id").get(async (req, res) => {
     id = isString("ID", id);
     data = await venueDataFunction.getVenueByID(id);
   } catch (error) {
-    return res.status(404).json({ error: error.message });
+    return res
+      .status(error.errors[0].status)
+      .render("pages/error", { error_msg: `404: ${error.errors[0].detail}` });
   }
   let venue_name,
     venue_link,
@@ -78,7 +80,7 @@ router.route("/venuedetails/:id").get(async (req, res) => {
       venue_link = data.url;
       venue_link_text = "Venue Information on Ticketmaster";
     } else {
-      venue_link = "#";
+      venue_link = false;
       venue_link_text = "N/A";
     }
 
