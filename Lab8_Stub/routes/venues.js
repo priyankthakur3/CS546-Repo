@@ -56,7 +56,7 @@ router.route("/venuedetails/:id").get(async (req, res) => {
     data = await venueDataFunction.getVenueByID(id);
   } catch (error) {
     return res
-      .status(error.errors[0].status)
+      .status(Number(error.errors[0].status))
       .render("pages/error", { error_msg: `404: ${error.errors[0].detail}` });
   }
   let venue_name,
