@@ -8,7 +8,7 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   //code here for GET
   try {
-    res.render("pages/homepage", { title: "Venue Finder" });
+    res.render("homepage", { title: "Venue Finder" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -19,7 +19,7 @@ router.route("/searchvenues").post(async (req, res) => {
   try {
     searchVenueTerm = isString("Venue Search Term", searchVenueTerm);
   } catch (error) {
-    return res.status(400).render("pages/homepage", {
+    return res.status(400).render("homepage", {
       title: "Venue Finder",
       error_msg: error.message,
     });
@@ -29,7 +29,7 @@ router.route("/searchvenues").post(async (req, res) => {
     data = await venueDataFunction.getVenueSearch(searchVenueTerm);
     if (data.page.totalElements === 0) throw `No Shows found`;
   } catch (error) {
-    return res.status(400).render("pages/venueNotFound", {
+    return res.status(400).render("venueNotFound", {
       title: "Venue Finder",
       searchVenueTerm,
     });
@@ -37,7 +37,7 @@ router.route("/searchvenues").post(async (req, res) => {
   try {
     const firstTenVenues = data._embedded.venues.slice(0, 10);
 
-    res.render("pages/venueSearchResults", {
+    res.render("venueSearchResults", {
       title: "Venues Found",
       searchVenueTerm,
       venues: firstTenVenues,
@@ -57,7 +57,7 @@ router.route("/venuedetails/:id").get(async (req, res) => {
   } catch (error) {
     return res
       .status(Number(error.errors[0].status))
-      .render("pages/error", { error_msg: `404: ${error.errors[0].detail}` });
+      .render("error", { error_msg: `404: ${error.errors[0].detail}` });
   }
   let venue_name,
     venue_link,
@@ -83,28 +83,32 @@ router.route("/venuedetails/:id").get(async (req, res) => {
       venue_link = false;
       venue_link_text = "N/A";
     }
+    let line1, country, city, stateCode, postalCode;
+    if (data.address.line1) line1 = data.address.line1;
+    else line1 = "N/A";
+    if (data.country) country = data.country;
+    else country = "N/A";
+    if (data.city.name) city = data.city.name;
+    else city = "N/A";
+    if (data.state.stateCode) stateCode = data.state.stateCode;
+    else stateCode = "N/A";
+    if (data.postalCode) postalCode = data.postalCode;
+    else postalCode = "N/A";
 
-    if (
-      data.address.line1 &&
-      data.country &&
-      data.city.name &&
-      data.state.stateCode &&
-      data.postalCode
-    ) {
-      if (data.address.line2)
-        venue_address = data.address.line1.concat(", ", data.address.line2);
-      else
-        venue_address = data.address.line1.concat(
-          ", ",
-          data.city.name,
-          ", ",
-          data.state.stateCode,
-          " ",
-          data.postalCode
-        );
-    } else venue_address = "N/A";
+    if (data.address.line2)
+      venue_address = line1.concat(", ", data.address.line2);
+    else venue_address = line1;
 
-    res.render("pages/venueByID", {
+    venue_address = venue_address.concat(
+      ", ",
+      city,
+      ", ",
+      stateCode,
+      " ",
+      postalCode
+    );
+
+    res.render("venueByID", {
       title: venue_name,
       venue_name,
       venue_image_path,
