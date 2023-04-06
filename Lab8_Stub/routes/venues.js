@@ -8,7 +8,7 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   //code here for GET
   try {
-    res.render("homepage", { title: "Venue Finder" });
+    return res.render("homepage", { title: "Venue Finder" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -29,11 +29,12 @@ router.route("/searchvenues").post(async (req, res) => {
     data = await venueDataFunction.getVenueSearch(searchVenueTerm);
     if (data.page.totalElements === 0) throw `No Shows found`;
   } catch (error) {
-    if (error.response.status === 401)
-      return res
-        .status(500)
-        .render("error", { error_msg: `Internal Server Error!!` });
-    console.log(error.response.status);
+    if (error.response)
+      if (error.response.status === 401)
+        return res
+          .status(500)
+          .render("error", { error_msg: `Internal Server Error!!` });
+
     return res.status(400).render("venueNotFound", {
       title: "Venue Finder",
       searchVenueTerm,
