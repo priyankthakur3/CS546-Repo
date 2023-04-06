@@ -4,7 +4,7 @@ import venueRoutes from "./venues.js";
 const constructorMethod = (app) => {
   app.use("/", venueRoutes);
   app.use("*", (req, res) => {
-    return res.status(404).render("pages/error", {
+    return res.status(404).render("error", {
       title: "Error",
       error_msg: "Error 404: You Found a Page That Do-not Exist!",
     });
