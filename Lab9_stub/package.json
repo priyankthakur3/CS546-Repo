@@ -1,0 +1,19 @@
+{
+  "name": "cs-546-lab9",
+  "version": "1.0.0",
+  "description": "My Lab 9 module",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Priyank Thakur 20009546",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.4",
+    "nodemon": "^2.0.22"
+  }
+}
