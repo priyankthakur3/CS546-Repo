@@ -31,9 +31,10 @@ router.route("/searchvenues").post(async (req, res) => {
   } catch (error) {
     if (error.response)
       if (error.response.status === 401)
-        return res
-          .status(500)
-          .render("error", { error_msg: `Internal Server Error!!` });
+        return res.status(500).render("error", {
+          title: "Server Error",
+          error_msg: `Internal Server Error!!`,
+        });
 
     return res.status(400).render("venueNotFound", {
       title: "Venue Finder",
@@ -62,14 +63,16 @@ router.route("/venuedetails/:id").get(async (req, res) => {
     data = await venueDataFunction.getVenueByID(id);
   } catch (error) {
     if (error.errors || error.error.length > 0)
-      return res
-        .status(Number(error.errors[0].status))
-        .render("error", { error_msg: `404: ${error.errors[0].detail}` });
+      return res.status(Number(error.errors[0].status)).render("error", {
+        title: "Venue Not Found",
+        error_msg: `404: ${error.errors[0].detail}`,
+      });
 
     if (error.fault || error.fault.faultstring === "Invalid ApiKey")
-      return res
-        .status(500)
-        .render("error", { error_msg: `Internal Server Error!!` });
+      return res.status(500).render("error", {
+        title: "Error",
+        error_msg: `Internal Server Error!!`,
+      });
   }
   let venue_name,
     venue_link,
