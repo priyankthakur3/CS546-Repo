@@ -197,3 +197,65 @@ If the user does not have a value for the input when they submit, you should not
 
 
 */
+
+let myForm = document.getElementById("myForm");
+let textInput = document.getElementById("text-input");
+const regexVowels = /[aeiou]/g;
+const regexConsonants = /[bcdfghjklmnpqrstvwxyz]/g;
+let resultsDiv = document.getElementById("results");
+
+if (myForm) {
+  myForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const textInputValue = textInput.value.toLowerCase().trim();
+    if (textInputValue) {
+      const textCharacters = textInputValue.replace(/[^a-zA-Z]/g, "").length;
+      const textNonAlpha = textInputValue.replace(/[a-zA-z]/g, "").length;
+      let textVowels = 0,
+        textConsonants = 0;
+      if (regexVowels.test(textInputValue))
+        textVowels = textInputValue.match(/[aeiou]/g).length;
+      if (regexConsonants.test(textInputValue))
+        textConsonants = textInputValue.match(
+          /[bcdfghjklmnpqrstvwxyz]/g
+        ).length;
+
+      const textWords = textInputValue
+        .replace(/[^a-zA-Z\t\s]/g, "") //get rid of all non-alpha characters
+        .trim()
+        .split(/\s+/); //split on space
+
+      const textWordsLen = textWords.length;
+      const textUniqueWords = new Set(textWords);
+      const textUniqueWordsLen = textUniqueWords.size;
+
+      let longWords = textWords.filter((word) => word.length >= 6);
+
+      let textAnalysisDiv = `<dl>
+            <dt>Original Input:</dt>
+            <dd>${textInput.value}</dd>
+            <dt>Total Letters</dt>
+            <dd>${textCharacters}</dd>
+            <dt>Total Non-Letters</dt>
+            <dd>${textNonAlpha}</dd>
+            <dt>Total Vowels</dt>
+            <dd>${textVowels}</dd>
+            <dt>Total Consonants</dt>
+            <dd>${textConsonants}</dd>
+            <dt>Total Words</dt>
+            <dd>${textWordsLen}</dd>
+            <dt>Unique Words</dt>
+            <dd>${textUniqueWordsLen}</dd>
+            <dt>Long Words</dt>
+            <dd>${longWords.length}</dd>
+            <dt>Short Words</dt>
+            <dd>${textWordsLen - longWords.length}</dd>
+          </dl>`;
+      resultsDiv.hidden = false;
+      resultsDiv.innerHTML += textAnalysisDiv;
+      textInput.value = "";
+    } else {
+      window.alert("Please Input text!!");
+    }
+  });
+}
