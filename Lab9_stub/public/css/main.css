@@ -1,3 +1,94 @@
 /*
 You will style your page using at least 5 CSS selectors for general CSS styling. You will place the CSS in its own file. 
 */
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    background-color: lightgray;
+}
+
+main {
+    padding: 10px 10px;
+}
+
+
+#text-input {
+    height: 100px;
+    width: 90%;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border: 2px solid #15151568;
+    outline: none;
+    padding: 10px 15px;
+    transition: 0.2s;
+    font-size: 15px;
+}
+
+#text-input:focus {
+    border: 2px solid #010000;
+}
+
+.submit-button {
+    margin-top: 10px;
+    background-color: #555555;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    padding: 10px 15px;
+    text-align: center;
+    transition-duration: 0.2s;
+    border: 2px solid #555555;
+}
+
+.submit-button:hover {
+    background-color: #fff;
+    color: #555555;
+    border: 2px solid #555555;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    background-color: black;
+    color: #fff;
+    padding: 5px;
+}
+.myForm{
+    max-width: 95%;
+}
+
+.form-result {
+    display: grid;
+    grid-gap: 0.5rem;
+    grid-template-columns: auto auto ;
+    max-width: 95%;
+}
+
+dl {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    background-color: #fff;
+}
+
+dt {
+    float: left;
+    clear: left;
+    width: 150px;
+    font-weight: bold;
+}
+
+dd {
+    overflow: auto;
+    margin: 0 0 0 80px;
+    padding: 0 0 0.4em 0;
+}
+
+
+
