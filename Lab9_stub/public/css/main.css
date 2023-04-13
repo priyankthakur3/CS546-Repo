@@ -12,8 +12,13 @@ main {
     padding: 10px 10px;
 }
 
+#error {
+    background-color: crimson;
+    color: #fff;
+}
 
-#text-input {
+
+#text_input {
     height: 100px;
     width: 90%;
     margin-top: 5px;
@@ -25,8 +30,12 @@ main {
     font-size: 15px;
 }
 
-#text-input:focus {
+#text_input:focus {
     border: 2px solid #010000;
+}
+
+#text_input_error {
+    border: 2px solid crimson;
 }
 
 .submit-button {
@@ -66,14 +75,14 @@ footer {
 
 .form-result {
     display: grid;
-    grid-gap: 0.5rem;
-    grid-template-columns: auto auto ;
-    max-width: 95%;
+    max-width: 90%;
 }
 
 dl {
+    border-radius: 2px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     padding: 15px;
+    width: auto;
     background-color: #fff;
 }
 
