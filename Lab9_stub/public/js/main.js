@@ -199,31 +199,32 @@ If the user does not have a value for the input when they submit, you should not
 */
 
 let myForm = document.getElementById("myForm");
-let textInput = document.getElementById("text-input");
+let textInput = document.getElementById("text_input");
 const regexVowels = /[aeiou]/g;
 const regexConsonants = /[bcdfghjklmnpqrstvwxyz]/g;
 let resultsDiv = document.getElementById("results");
 
 if (myForm) {
   myForm.addEventListener("submit", function (event) {
+    let errorDiv = document.getElementById("error");
     event.preventDefault();
-    const textInputValue = textInput.value.toLowerCase().trim();
+    const textInputValue = textInput.value.toLowerCase();
     if (textInputValue) {
+      if (errorDiv) errorDiv.remove();
+
       const textCharacters = textInputValue.replace(/[^a-zA-Z]/g, "").length;
       const textNonAlpha = textInputValue.replace(/[a-zA-z]/g, "").length;
       let textVowels = 0,
         textConsonants = 0;
       if (regexVowels.test(textInputValue))
-        textVowels = textInputValue.match(/[aeiou]/g).length;
+        textVowels = textInputValue.match(regexVowels).length;
       if (regexConsonants.test(textInputValue))
-        textConsonants = textInputValue.match(
-          /[bcdfghjklmnpqrstvwxyz]/g
-        ).length;
+        textConsonants = textInputValue.match(regexConsonants).length;
 
       const textWords = textInputValue
-        .replace(/[^a-zA-Z\t\s]/g, "") //get rid of all non-alpha characters
+        .replace(/[^a-zA-Z\t\s]/g, "")
         .trim()
-        .split(/\s+/); //split on space
+        .split(/\s+/);
 
       const textWordsLen = textWords.length;
       const textUniqueWords = new Set(textWords);
@@ -231,7 +232,8 @@ if (myForm) {
 
       let longWords = textWords.filter((word) => word.length >= 6);
 
-      let textAnalysisDiv = `<dl>
+      let textAnalysisDiv = document.createElement("dl");
+      textAnalysisDiv.innerHTML = `
             <dt>Original Input:</dt>
             <dd>${textInput.value}</dd>
             <dt>Total Letters</dt>
@@ -249,13 +251,22 @@ if (myForm) {
             <dt>Long Words</dt>
             <dd>${longWords.length}</dd>
             <dt>Short Words</dt>
-            <dd>${textWordsLen - longWords.length}</dd>
-          </dl>`;
+            <dd>${textWordsLen - longWords.length}</dd>`;
+
       resultsDiv.hidden = false;
-      resultsDiv.innerHTML += textAnalysisDiv;
+      resultsDiv.prepend(textAnalysisDiv);
       textInput.value = "";
     } else {
-      window.alert("Please Input text!!");
+      window.alert("Please Input text to run Analysis!!");
+      textInput.focus();
+
+      if (!errorDiv) {
+        let error = document.createElement("dl");
+        error.innerHTML =
+          "<dt>Error</dt><dd>Please Input Text in Field!!</dd> ";
+        error.setAttribute("id", "error");
+        resultsDiv.prepend(error);
+      }
     }
   });
 }
