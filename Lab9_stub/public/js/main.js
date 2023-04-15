@@ -222,7 +222,7 @@ if (myForm) {
         textConsonants = textInputValue.match(regexConsonants).length;
 
       const textWords = textInputValue
-        .replace(/[^a-zA-Z\t\s]/g, "")
+        .replace(/[^a-zA-Z\t\s]+/g, " ")
         .trim()
         .split(/\s+/);
 
@@ -231,6 +231,7 @@ if (myForm) {
       const textUniqueWordsLen = textUniqueWords.size;
 
       let longWords = textWords.filter((word) => word.length >= 6);
+      let shortWords = textWords.filter((word) => word.length <= 3);
 
       let textAnalysisDiv = document.createElement("dl");
       textAnalysisDiv.innerHTML = `
@@ -251,10 +252,10 @@ if (myForm) {
             <dt>Long Words</dt>
             <dd>${longWords.length}</dd>
             <dt>Short Words</dt>
-            <dd>${textWordsLen - longWords.length}</dd>`;
+            <dd>${shortWords.length}</dd>`;
 
       resultsDiv.hidden = false;
-      resultsDiv.prepend(textAnalysisDiv);
+      resultsDiv.append(textAnalysisDiv);
       textInput.value = "";
     } else {
       window.alert("Please Input text to run Analysis!!");

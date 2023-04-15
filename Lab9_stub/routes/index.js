@@ -5,7 +5,7 @@ import textAnalyzerData from "./textanalyzer.js";
 const constructorMethod = (app) => {
   app.use("/", textAnalyzerData);
   app.use("*", (req, res) => {
-    res.status(404).json({ error: "Bummer!!! Page Not Found" });
+    res.redirect("/");
   });
 };
 
