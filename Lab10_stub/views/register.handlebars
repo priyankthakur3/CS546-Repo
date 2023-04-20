@@ -3,3 +3,50 @@
 registration handelbars
 
 --}}
+
+
+<form action="/register" id="registration-form" method="POST">
+    <label for="firstNameInput">First Name</label>
+    <br>
+    <input class="form-input" id="firstNameInput" name="firstNameInput" type="text" placeholder="First Name" />
+    <br>
+    <label for="lastNameInput">Last Name</label>
+    <br>
+    <input class="form-input" id="lastNameInput" name="lastNameInput" type="text" placeholder="Last Name" />
+    <br>
+    <label for="emailAddressInput">Email ID</label>
+    <br>
+    <input class="form-input" id="emailAddressInput" name="emailAddressInput" type="email" placeholder="example@example.com" />
+    <br>
+    <label for="passwordInput">Password</label>
+    <br>
+    <input class="form-input" id="passwordInput" name="passwordInput" type="password" placeholder="Password" />
+    <br>
+    <label for="confirmPasswordInput">Confirm Password</label>
+    <br>
+    <input class="form-input" id="confirmPasswordInput" name="confirmPasswordInput" type="password" placeholder="Confirm Password" />
+    <br>
+
+    <label for="roleInput">Role</label>
+    <br>
+    <select name="roleInput" class="form-input" id="roleInput">
+        <option value="none" selected disabled hidden>Select an Option</option>
+        <option value="user">User</option>
+        <option value="admin">Admin</option>     
+    </select>
+    <br>
+    <input class="submit-button" type="submit" value="Submit">
+</form>
+<div id="error-client" hidden></div>
+{{#if render_error}}
+{{> error}}
+{{/if}}
+
+{{#if newUserCreated}}
+<p class="success"> New User Created</p>
+{{/if}}
+
+<a href="/login">Already a user! Click here to Login!</a>
+
+
+<script src="/public/js/lab10.js"></script>
