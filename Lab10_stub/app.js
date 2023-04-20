@@ -73,12 +73,67 @@ app.use(
     saveUninitialized: false,
   })
 );
+const logMiddelWare = (req, res, next) => {
+  console.log(
+    `[${new Date().toUTCString()}]: ${req.method} ${req.originalUrl} ${
+      req.session.user &&
+      (req.session.user.role === "admin" || req.session.user.role === "user")
+        ? "(Authenticated User)"
+        : "(Non-Authenticated User)"
+    }`
+  );
+  next();
+};
+
+app.use(logMiddelWare);
+
+app.use("/login", async (req, res, next) => {
+  if (req.session.user && req.session.user.role === "admin") {
+    return res.redirect("/admin");
+  } else if (req.session.user && req.session.user.role === "user") {
+    return res.redirect("/protected");
+  }
+  next();
+});
+
+app.use("/register", async (req, res, next) => {
+  if (req.session.user && req.session.user.role === "admin") {
+    return res.redirect("/admin");
+  } else if (req.session.user && req.session.user.role === "user") {
+    return res.redirect("/protected");
+  }
+  next();
+});
+
+app.use("/protected", async (req, res, next) => {
+  if (
+    req.session.user &&
+    (req.session.user.role === "admin" || req.session.user.role === "user")
+  ) {
+    next();
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+app.use("/admin", async (req, res, next) => {
+  if (req.session.user && req.session.user.role === "admin") {
+    next();
+  } else {
+    return res
+      .status(403)
+      .render("error", {
+        title: "Error: 403",
+        error_msg: "403 - You are not admin",
+      });
+  }
+});
 
 app.engine(
   "handlebars",
   exphbs.engine({
     defaultLayout: "main",
-    partialsDir: [path.join(__dirname + "/views/partials")],
+    partialsDir: [path.join(__dirname + "/views")],
   })
 );
 app.set("view engine", "handlebars");
