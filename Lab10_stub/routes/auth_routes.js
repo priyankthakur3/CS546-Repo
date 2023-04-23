@@ -9,7 +9,6 @@ const router = Router();
 
 router.route("/").get(
   (req, res, next) => {
-    console.log("middleware");
     if (!req.session.user) {
       return res.redirect("/login");
     } else if (req.session.user.role === "admin") return res.redirect("/admin");
@@ -144,6 +143,11 @@ router.route("/admin").get(async (req, res) => {
 
 router.route("/error").get(async (req, res) => {
   //code here for GET
+
+  return res.status(req.session.error.error_code).render("error", {
+    title: "error",
+    error_msg: req.session.error.msg,
+  });
 });
 
 router.route("/logout").get(async (req, res) => {
