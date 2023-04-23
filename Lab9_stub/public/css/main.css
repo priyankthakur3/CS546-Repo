@@ -12,6 +12,15 @@ main {
     padding: 10px 10px;
 }
 
+a {
+    text-decoration: none;
+}
+
+h1 {
+    padding: 0 15px;
+    text-align: center;
+}
+
 #error {
     background-color: crimson;
     color: #fff;
@@ -98,6 +107,7 @@ dd {
     margin: 0 0 0 80px;
     padding: 0 0 0.4em 0;
 }
+
 
 
 
