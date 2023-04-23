@@ -9,7 +9,7 @@ if (loginForm) {
     let password = document.getElementById("passwordInput");
     let error_client = document.getElementById("error-client");
     error_client.hidden = true;
-
+    error_client.innerHTML = "";
     if (!checkMail(email.value))
       error.push(`Expected Email id to be of proper form`);
     if (!password || !checkPassword(password.value))
@@ -37,12 +37,17 @@ if (signupForm) {
   signupForm.addEventListener("submit", function (event) {
     event.preventDefault();
     let error = [];
+    let firstName = document.getElementById("firstNameInput");
+    let lastName = document.getElementById("lastNameInput");
     let email = document.getElementById("emailAddressInput");
     let password = document.getElementById("passwordInput");
     let confirmPassword = document.getElementById("confirmPasswordInput");
     let role = document.getElementById("roleInput");
     let error_client = document.getElementById("error-client");
     error_client.hidden = true;
+    error_client.innerHTML = "";
+    if (!checkName(firstName.value) || !checkName(lastName.value))
+      error.push(`Expected First Name and Last Name`);
     if (!checkMail(email.value))
       error.push(`Expected Email id to be of proper form`);
     if (!password || !checkPassword(password.value))
