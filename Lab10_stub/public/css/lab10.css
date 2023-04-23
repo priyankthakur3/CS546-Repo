@@ -13,6 +13,15 @@ main {
     align-items: center;
     flex-direction: column;
 }
+a {
+    margin-top: 0.5em;
+    text-decoration: none;
+}
+
+h1 {
+    padding: 0 14px;
+    text-align: center;
+}
 
 form {
     width: 25%;
@@ -75,7 +84,3 @@ form *+* {
     background-color: rgba(255, 0, 0, 0.274);
 }
 
-a{
-    margin-top: 0.5em;
-    text-decoration: none;
-}
