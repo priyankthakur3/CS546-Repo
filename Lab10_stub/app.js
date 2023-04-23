@@ -105,6 +105,20 @@ app.use("/register", async (req, res, next) => {
   next();
 });
 
+app.use("/error", async (req, res, next) => {
+  if (!req.session.error) {
+    return res.redirect("/");
+  }
+  next();
+});
+
+app.use("/logout", async (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/");
+  }
+  next();
+});
+
 app.use("/protected", async (req, res, next) => {
   if (
     req.session.user &&
@@ -117,16 +131,16 @@ app.use("/protected", async (req, res, next) => {
 });
 
 app.use("/admin", async (req, res, next) => {
-  if (req.session.user && req.session.user.role === "admin") {
-    next();
-  } else {
-    return res
-      .status(403)
-      .render("error", {
-        title: "Error: 403",
-        error_msg: "403 - You are not admin",
-      });
+  if (req.session.user && req.session.user.role !== "admin") {
+    req.session.error = {
+      msg: "403 - You are not admin",
+      error_code: 403,
+    };
+    return res.redirect("/error");
+  } else if (!req.session.user) {
+    return res.redirect("/login");
   }
+  next();
 });
 
 app.engine(
