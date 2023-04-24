@@ -135,7 +135,7 @@ router.route("/protected").get(async (req, res) => {
 router.route("/admin").get(async (req, res) => {
   //code here for GET
   return res.render("admin", {
-    title: "Protected Route",
+    title: "Admin Route",
     firstName: req.session.user.firstName,
     currentTime: new Date().toUTCString(),
   });
